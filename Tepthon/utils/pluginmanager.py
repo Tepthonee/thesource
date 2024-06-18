@@ -15,7 +15,7 @@ from ..helpers.utils import _zedtools, _zedutils, _format, install_pip, reply_id
 from .decorators import admin_cmd, sudo_cmd
 
 LOGS = logging.getLogger("سورس تيبثون")
-
+inst_done = "✅ تـم تنصيب سـورس تيبثون بنجـاح ⌔\n💡 ثم أرسل الأمــر ( . مساعدة ) ⌔\n♥️ قم بالذهاب إلى تيليجـرام الآن ⌔"
 
 def load_module(shortname, plugin_path=None):
     if shortname.startswith("__"):
@@ -27,7 +27,7 @@ def load_module(shortname, plugin_path=None):
         spec = importlib.util.spec_from_file_location(name, path)
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
-        LOGS.info(f"تـم تثبيت ملـف {shortname}")
+        LOGS.info(f"Successfully imported {shortname}")
     else:
         if plugin_path is None:
             path = Path(f"Tepthon/plugins/{shortname}.py")
@@ -59,7 +59,52 @@ def load_module(shortname, plugin_path=None):
         spec.loader.exec_module(mod)
         # for imports
         sys.modules[f"Tepthon.plugins.{shortname}"] = mod
-        LOGS.info(f"تـم تثبيت ملـف {shortname}")
+        LOGS.info(f"Successfully imported {shortname}")
+
+
+def lload_module(shortname, plugin_path=None):
+    if shortname.startswith("__"):
+        pass
+    elif shortname.endswith("_"):
+        path = Path(f"Tepthon/plugins/{shortname}.py")
+        checkplugins(path)
+        name = "Tepthon.plugins.{}".format(shortname)
+        spec = importlib.util.spec_from_file_location(name, path)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        print("Successfully imported library")
+    else:
+        if plugin_path is None:
+            path = Path(f"Tepthon/plugins/{shortname}.py")
+            name = f"Tepthon.plugins.{shortname}"
+        else:
+            path = Path((f"{plugin_path}/{shortname}.py"))
+            name = f"{plugin_path}/{shortname}".replace("/", ".")
+        checkplugins(path)
+        spec = importlib.util.spec_from_file_location(name, path)
+        mod = importlib.util.module_from_spec(spec)
+        mod.bot = zedub
+        mod.LOGS = LOGS
+        mod.Config = Config
+        mod._format = _format
+        mod.tgbot = zedub.tgbot
+        mod.sudo_cmd = sudo_cmd
+        mod.CMD_HELP = CMD_HELP
+        mod.reply_id = reply_id
+        mod.admin_cmd = admin_cmd
+        mod._zedutils = _zedutils
+        mod._zedtools = _zedtools
+        mod.media_type = media_type
+        mod.edit_delete = edit_delete
+        mod.install_pip = install_pip
+        mod.parse_pre = _format.parse_pre
+        mod.edit_or_reply = edit_or_reply
+        mod.logger = logging.getLogger(shortname)
+        mod.borg = zedub
+        spec.loader.exec_module(mod)
+        # for imports
+        sys.modules[f"Tepthon.plugins.{shortname}"] = mod
+        print("Successfully imported library")
 
 
 def remove_plugin(shortname):
