@@ -87,6 +87,7 @@ zed_temp = """{ALIVE_TEXT}
 **{Z_EMOJI} إصــدار الـسـورس : ** `{zdver}`
 **{Z_EMOJI} إصــدار بايـثـون : ** `{pyver}`
 **{Z_EMOJI} وقـت التشغيـل : ** `{uptime}`
+**{Z_EMOJI} منصـة التنصيب :** `ᕼᗴᖇOKᑌ`
 **{Z_EMOJI} تاريــخ التنصيـب : ** `{zedda}`
 **{Z_EMOJI} المالـك : ** {mention}
 **{Z_EMOJI} قنـاة الـسـورس :** [اضغـط هنـا](https://t.me/Tepthon)"""
