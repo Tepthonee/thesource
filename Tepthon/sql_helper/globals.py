@@ -15,7 +15,7 @@ class Globals(BASE):
         self.value = value
 
 
-Globals.__table__.create(bind=SESSION.get_bind(), checkfirst=True)
+Globals.__table__.create(checkfirst=True)
 
 
 def gvarstatus(variable):
@@ -41,10 +41,10 @@ def addgvar(variable, value):
 
 
 def delgvar(variable):
-    rem = (
+    if rem := (
         SESSION.query(Globals)
         .filter(Globals.variable == str(variable))
         .delete(synchronize_session="fetch")
-    )
-    if rem:
+    ):
+        SESSION.commit()
         SESSION.commit()
