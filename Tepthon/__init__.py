@@ -6,13 +6,13 @@ import heroku3
 
 from .Config import Config
 from .core.logger import logging
-from .core.session import zedub
+from .core.session import zedub, tgbot
 from .helpers.functions.converter import Convert
 from .helpers.functions.musictool import *
 from .helpers.utils.utils import runasync
 from .sql_helper.globals import addgvar, delgvar, gvarstatus
 
-__version__ = "3.1.1"
+__version__ = "3.2.0"
 __license__ = "GNU Affero General Public License v3.0"
 __author__ = "Tepthon <https://github.com/Tepthonee/thesource>"
 __copyright__ = "Tepthon Copyright (C) 2021 - 2022  {__author__}"
