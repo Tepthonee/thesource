@@ -3,8 +3,8 @@ from sqlalchemy import Column, Numeric, String, UnicodeText
 from . import BASE, SESSION
 
 
-class Filter(BASE):
-    __tablename__ = "zedfilters"
+class Pmrad(BASE):
+    __tablename__ = "zedpmrads"
     chat_id = Column(String(14), primary_key=True)
     keyword = Column(UnicodeText, primary_key=True, nullable=False)
     reply = Column(UnicodeText)
@@ -18,56 +18,56 @@ class Filter(BASE):
 
     def __eq__(self, other):
         return bool(
-            isinstance(other, Filter)
+            isinstance(other, Pmrad)
             and self.chat_id == other.chat_id
             and self.keyword == other.keyword
         )
 
 
-Filter.__table__.create(bind=SESSION.get_bind(), checkfirst=True)
+Pmrad.__table__.create(bind=SESSION.get_bind(), checkfirst=True)
 
 
-def get_filter(chat_id, keyword):
+def get_pmrad(chat_id, keyword):
     try:
-        return SESSION.query(Filter).get((str(chat_id), keyword))
+        return SESSION.query(Pmrad).get((str(chat_id), keyword))
     finally:
         SESSION.close()
 
 
-def get_filters(chat_id):
+def get_pmrads(chat_id):
     try:
-        return SESSION.query(Filter).filter(Filter.chat_id == str(chat_id)).all()
+        return SESSION.query(Pmrad).filter(Pmrad.chat_id == str(chat_id)).all()
     finally:
         SESSION.close()
 
 
-def add_filter(chat_id, keyword, reply, f_mesg_id):
-    to_check = get_filter(chat_id, keyword)
+def add_pmrad(chat_id, keyword, reply, f_mesg_id):
+    to_check = get_pmrad(chat_id, keyword)
     if not to_check:
-        adder = Filter(str(chat_id), keyword, reply, f_mesg_id)
+        adder = Pmrad(str(chat_id), keyword, reply, f_mesg_id)
         SESSION.add(adder)
         SESSION.commit()
         return True
-    rem = SESSION.query(Filter).get((str(chat_id), keyword))
+    rem = SESSION.query(Pmrad).get((str(chat_id), keyword))
     SESSION.delete(rem)
     SESSION.commit()
-    adder = Filter(str(chat_id), keyword, reply, f_mesg_id)
+    adder = Pmrad(str(chat_id), keyword, reply, f_mesg_id)
     SESSION.add(adder)
     SESSION.commit()
     return False
 
 
-def remove_filter(chat_id, keyword):
-    to_check = get_filter(chat_id, keyword)
+def remove_pmrad(chat_id, keyword):
+    to_check = get_pmrad(chat_id, keyword)
     if not to_check:
         return False
-    rem = SESSION.query(Filter).get((str(chat_id), keyword))
+    rem = SESSION.query(Pmrad).get((str(chat_id), keyword))
     SESSION.delete(rem)
     SESSION.commit()
     return True
 
 
-def remove_all_filters(chat_id):
-    if saved_filter := SESSION.query(Filter).filter(Filter.chat_id == str(chat_id)):
-        saved_filter.delete()
+def remove_all_pmrads(chat_id):
+    if saved_pmrad := SESSION.query(Pmrad).filter(Pmrad.chat_id == str(chat_id)):
+        saved_pmrad.delete()
         SESSION.commit()
