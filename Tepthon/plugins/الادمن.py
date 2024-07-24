@@ -64,7 +64,7 @@ UNBAN_RIGHTS = ChatBannedRights(
 LOGS = logging.getLogger(__name__)
 MUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=True)
 UNMUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=False)
-zel_dev = (1260465030, 6981066109, 95801588376, 1239602580)
+zel_dev = (1260465030, 6981066109, 1049705137, 1239602580)
 
 plugin_category = "الادمن"
 
@@ -346,7 +346,7 @@ async def nothanos(event):
     user, _ = await get_user_from_event(event)
     if not user:
         return
-    zedevent = await edit_or_reply(event, "**╮ ❐.. جـاري الغاء حـظࢪه ..❏╰**")
+    zedevent = await edit_or_reply(event, "**╮ ❐.. جـاري إلغاء حـظࢪه ..❏╰**")
     try:
         await event.client(EditBannedRequest(event.chat_id, user.id, UNBAN_RIGHTS))
         await zedevent.edit(
@@ -421,18 +421,18 @@ async def startmute(event):
             return await edit_or_reply(event, "**- عــذراً .. لا استطيــع كتــم نفســي**")
         if user.id in zel_dev:
             return await edit_or_reply(event, "**╮ ❐ دي لا يمڪنني كتـم احـد مساعديـن السـورس  ❏╰**")
-        if user.id == 925972505 or user.id == 1895219306 or user.id == 2095357462:
+        if user.id == 1260465030 or user.id == 189521906 or user.id == 2095357462:
             return await edit_or_reply(event, "**╮ ❐ دي . . لا يمڪنني كتـم مطـور السـورس  ❏╰**")
         if is_muted(user.id, event.chat_id):
             return await edit_or_reply(
-                event, "**عــذراً .. هـذا الشخـص مكتــوم سـابقــاً هنـا**"
+                event, "**عذرًا .. هـذا الشخـص مكتــوم سـابقــاً هنـا**"
             )
         result = await event.client.get_permissions(event.chat_id, user.id)
         try:
             if result.participant.banned_rights.send_messages:
                 return await edit_or_reply(
                     event,
-                    "**عــذراً .. هـذا الشخـص مكتــوم سـابقــاً هنـا**",
+                    "**عذرًا .. هـذا الشخـص مكتــوم سابقًــا هنـا**",
                 )
         except AttributeError:
             pass
