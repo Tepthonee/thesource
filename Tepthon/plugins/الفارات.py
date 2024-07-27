@@ -1371,14 +1371,14 @@ async def _(tiba):
             downloaded_file_name = await tiba.client.download_media(
                 r_message, Config.TEMP_DIR
             )
-            await tep.edit(f"** ⪼ تم تحميل** {downloaded_file_name} **.. بنجـاح ✓**")
+            await rep.edit(f"** ⪼ تم تحميل** {downloaded_file_name} **.. بنجـاح ✓**")
             if downloaded_file_name.endswith((".webp")):
                 resize_image(downloaded_file_name)
             try:
                 start = datetime.now()
                 media_urls = upload_file(downloaded_file_name)
             except exceptions.TelegraphException as exc:
-                await tep.edit("**⎉╎خطأ : **" + str(exc))
+                await rep.edit("**⎉╎خطأ : **" + str(exc))
                 os.remove(downloaded_file_name)
             else:
                 end = datetime.now()
@@ -1386,19 +1386,19 @@ async def _(tiba):
                 os.remove(downloaded_file_name)
                 vinfo = ("https://graph.org{}".format(media_urls[0]))
                 addgvar("pmpermit_pic", vinfo)
-                await tep.edit("**⎉╎تم تغييـر صـورة {} .. بنجـاح ☑️**\n**⎉╎المتغيـر : ↶**\n `{}` \n\n**⎉╎قنـاة السـورس : @Tepthon**".format(input_str, vinfo))
+                await rep.edit("**⎉╎تم تغييـر صـورة {} .. بنجـاح ☑️**\n**⎉╎المتغيـر : ↶**\n `{}` \n\n**⎉╎قنـاة السـورس : @Tepthon**".format(input_str, vinfo))
         elif input_str in ["الفحص", "السورس"]:
             downloaded_file_name = await tiba.client.download_media(
                 r_message, Config.TEMP_DIR
             )
-            await tep.edit(f"** ⪼ تم تحميل** {downloaded_file_name} **.. بنجـاح ✓**")
+            await rep.edit(f"** ⪼ تم تحميل** {downloaded_file_name} **.. بنجـاح ✓**")
             if downloaded_file_name.endswith((".webp")):
                 resize_image(downloaded_file_name)
             try:
                 start = datetime.now()
                 media_urls = upload_file(downloaded_file_name)
             except exceptions.TelegraphException as exc:
-                await tep.edit("**⎉╎خطا : **" + str(exc))
+                await rep.edit("**⎉╎خطا : **" + str(exc))
                 os.remove(downloaded_file_name)
             else:
                 end = datetime.now()
@@ -1406,19 +1406,19 @@ async def _(tiba):
                 os.remove(downloaded_file_name)
                 vinfo = ("https://graph.org{}".format(media_urls[0]))
                 addgvar("ALIVE_PIC", vinfo)
-                await tep.edit("**⎉╎تم تغييـر صـورة {} .. بنجـاح ☑️**\n**⎉╎المتغيـر : ↶**\n `{}` \n\n**⎉╎قنـاة السـورس : @Tepthon**".format(input_str, vinfo))
+                await rep.edit("**⎉╎تم تغييـر صـورة {} .. بنجـاح ☑️**\n**⎉╎المتغيـر : ↶**\n `{}` \n\n**⎉╎قنـاة السـورس : @Tepthon**".format(input_str, vinfo))
         elif input_str in ["البوت", "الستارت"]:
             downloaded_file_name = await tiba.client.download_media(
                 r_message, Config.TEMP_DIR
             )
-            await tep.edit(f"** ⪼ تم تحميل** {downloaded_file_name} **.. بنجـاح ✓**")
+            await rep.edit(f"** ⪼ تم تحميل** {downloaded_file_name} **.. بنجـاح ✓**")
             if downloaded_file_name.endswith((".webp")):
                 resize_image(downloaded_file_name)
             try:
                 start = datetime.now()
                 media_urls = upload_file(downloaded_file_name)
             except exceptions.TelegraphException as exc:
-                await tep.edit("**⎉╎خطا : **" + str(exc))
+                await rep.edit("**⎉╎خطا : **" + str(exc))
                 os.remove(downloaded_file_name)
             else:
                 end = datetime.now()
@@ -1426,19 +1426,19 @@ async def _(tiba):
                 os.remove(downloaded_file_name)
                 vinfo = ("https://graph.org{}".format(media_urls[0]))
                 addgvar("BOT_START_PIC", vinfo)
-                await tep.edit("**⎉╎تم تغييـر صـورة {} .. بنجـاح ☑️**\n**⎉╎المتغيـر : ↶**\n `{}` \n\n**⎉╎قنـاة السـورس : @Tepthon**".format(input_str, vinfo))
+                await rep.edit("**⎉╎تم تغييـر صـورة {} .. بنجـاح ☑️**\n**⎉╎المتغيـر : ↶**\n `{}` \n\n**⎉╎قنـاة السـورس : @Tepthon**".format(input_str, vinfo))
         elif input_str in ["الاوامر", "اللوحه"]:
             downloaded_file_name = await tiba.client.download_media(
                 r_message, Config.TEMP_DIR
             )
-            await tep.edit(f"** ⪼ تم تحميل** {downloaded_file_name} **.. بنجـاح ✓**")
+            await rep.edit(f"** ⪼ تم تحميل** {downloaded_file_name} **.. بنجـاح ✓**")
             if downloaded_file_name.endswith((".webp")):
                 resize_image(downloaded_file_name)
             try:
                 start = datetime.now()
                 media_urls = upload_file(downloaded_file_name)
             except exceptions.TelegraphException as exc:
-                await tep.edit("**⎉╎خطأ : **" + str(exc))
+                await rep.edit("**⎉╎خطا : **" + str(exc))
                 os.remove(downloaded_file_name)
             else:
                 end = datetime.now()
@@ -1446,19 +1446,19 @@ async def _(tiba):
                 os.remove(downloaded_file_name)
                 vinfo = ("https://graph.org{}".format(media_urls[0]))
                 addgvar("CMD_PIC", vinfo)
-                await tep.edit("**⎉╎تم تغييـر صـورة {} .. بنجـاح ☑️**\n**⎉╎المتغيـر : ↶**\n `{}` \n\n**⎉╎قنـاة السـورس : @Tepthon**".format(input_str, vinfo))
+                await rep.edit("**⎉╎تم تغييـر صـورة {} .. بنجـاح ☑️**\n**⎉╎المتغيـر : ↶**\n `{}` \n\n**⎉╎قنـاة السـورس : @Tepthon**".format(input_str, vinfo))
         elif input_str in ["السورس", "سورس"]:
             downloaded_file_name = await tiba.client.download_media(
                 r_message, Config.TEMP_DIR
             )
-            await tep.edit(f"** ⪼ تم تحميل** {downloaded_file_name} **.. بنجـاح ✓**")
+            await rep.edit(f"** ⪼ تم تحميل** {downloaded_file_name} **.. بنجـاح ✓**")
             if downloaded_file_name.endswith((".webp")):
                 resize_image(downloaded_file_name)
             try:
                 start = datetime.now()
                 media_urls = upload_file(downloaded_file_name)
             except exceptions.TelegraphException as exc:
-                await tep.edit("**⎉╎خطا : **" + str(exc))
+                await rep.edit("**⎉╎خطا : **" + str(exc))
                 os.remove(downloaded_file_name)
             else:
                 end = datetime.now()
@@ -1466,19 +1466,19 @@ async def _(tiba):
                 os.remove(downloaded_file_name)
                 vinfo = ("https://graph.org{}".format(media_urls[0]))
                 addgvar("ALIVE_PIC", vinfo)
-                await tep.edit("**⎉╎تم تغييـر صـورة {} .. بنجـاح ☑️**\n**⎉╎المتغيـر : ↶**\n `{}` \n\n**⎉╎قنـاة السـورس : @Tepthon**".format(input_str, vinfo))
+                await rep.edit("**⎉╎تم تغييـر صـورة {} .. بنجـاح ☑️**\n**⎉╎المتغيـر : ↶**\n `{}` \n\n**⎉╎قنـاة السـورس : @Tepthon**".format(input_str, vinfo))
         elif input_str in ["الكتم", "كتم"]:
             downloaded_file_name = await tiba.client.download_media(
                 r_message, Config.TEMP_DIR
             )
-            await tep.edit(f"** ⪼ تم تحميل** {downloaded_file_name} **.. بنجـاح ✓**")
+            await rep.edit(f"** ⪼ تم تحميل** {downloaded_file_name} **.. بنجـاح ✓**")
             if downloaded_file_name.endswith((".webp")):
                 resize_image(downloaded_file_name)
             try:
                 start = datetime.now()
                 media_urls = upload_file(downloaded_file_name)
             except exceptions.TelegraphException as exc:
-                await tep.edit("**⎉╎خطا : **" + str(exc))
+                await rep.edit("**⎉╎خطا : **" + str(exc))
                 os.remove(downloaded_file_name)
             else:
                 end = datetime.now()
@@ -1486,19 +1486,19 @@ async def _(tiba):
                 os.remove(downloaded_file_name)
                 vinfo = ("https://graph.org{}".format(media_urls[0]))
                 addgvar("KTM_PIC", vinfo)
-                await tep.edit("**⎉╎تم تغييـر صـورة {} .. بنجـاح ☑️**\n**⎉╎المتغيـر : ↶**\n `{}` \n\n**⎉╎قنـاة السـورس : @Tepthon**".format(input_str, vinfo))
+                await rep.edit("**⎉╎تم تغييـر صـورة {} .. بنجـاح ☑️**\n**⎉╎المتغيـر : ↶**\n `{}` \n\n**⎉╎قنـاة السـورس : @Tepthon**".format(input_str, vinfo))
         elif input_str in ["الوقتي", "البروفايل"]:
             downloaded_file_name = await tiba.client.download_media(
                 r_message, Config.TEMP_DIR
             )
-            await tep.edit(f"** ⪼ تم تحميل** {downloaded_file_name} **.. بنجـاح ✓**")
+            await rep.edit(f"** ⪼ تم تحميل** {downloaded_file_name} **.. بنجـاح ✓**")
             if downloaded_file_name.endswith((".webp")):
                 resize_image(downloaded_file_name)
             try:
                 start = datetime.now()
                 media_urls = upload_file(downloaded_file_name)
             except exceptions.TelegraphException as exc:
-                await tep.edit("**⎉╎خطأ : **" + str(exc))
+                await rep.edit("**⎉╎خطأ : **" + str(exc))
                 os.remove(downloaded_file_name)
             else:
                 end = datetime.now()
@@ -1506,11 +1506,11 @@ async def _(tiba):
                 os.remove(downloaded_file_name)
                 vinfo = ("https://graph.org{}".format(media_urls[0]))
                 addgvar("DIGITAL_PIC", vinfo)
-                await tep.edit("**⎉╎تم تغييـر صـورة {} .. بنجـاح ☑️**\n**⎉╎المتغيـر : ↶**\n `{}` \n\n**⎉╎قنـاة السـورس : @Tepthon**".format(input_str, vinfo))
+                await rep.edit("**⎉╎تم تغييـر صـورة {} .. بنجـاح ☑️**\n**⎉╎المتغيـر : ↶**\n `{}` \n\n**⎉╎قنـاة السـورس : @Tepthon**".format(input_str, vinfo))
 
 
     else:
-        await tep.edit(
+        await rep.edit(
             "**⎉╎بالـرد ع صـورة لتعييـن الفـار ...**",
         )
 
