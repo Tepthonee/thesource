@@ -13,4 +13,4 @@ async def _(event):
        return await edit_or_reply(event, "**✾╎استخـدم الامـر كالتالـي .. حساب العمر + السنـه**")
     YearNow = datetime.now().year
     MyAge = YearNow - yar
-    await edit_or_reply(e, "**🚹╎عمرك هـو :**  {}".format(MyAge))
+    await edit_or_reply(event, "**🚹╎عمرك هـو :**  {}".format(MyAge))
