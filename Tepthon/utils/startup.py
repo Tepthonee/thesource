@@ -44,7 +44,7 @@ ENV = bool(os.environ.get("ENV", False))
 LOGS = logging.getLogger("𝐬𝐨𝐮𝐫𝐜𝐞 𝐭𝐞𝐩𝐭𝐡𝐨𝐧 🇵🇸")
 cmdhr = Config.COMMAND_HAND_LER
 Zed_Vip = (1260465030, 6583951825)
-zchannel = {"@Tepthon", "@Tepthon_Help", "@Tepthone1", "@Tws_Tepthon", "@tepthonklaesh", "@PPYNY"}
+zchannel = {"@Tepthon", "@Tepthon_Support", "@Tws_Tepthon", "@tepthonklaesh", "@PPYNY"}
 heroku_api = "https://api.heroku.com"
 if Config.HEROKU_APP_NAME is not None and Config.HEROKU_API_KEY is not None:
     Heroku = heroku3.from_key(Config.HEROKU_API_KEY)
