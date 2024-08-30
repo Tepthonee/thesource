@@ -17,16 +17,6 @@ from . import ALIVE_NAME, deEmojify
 DEFAULTUSER = str(ALIVE_NAME) if ALIVE_NAME else "ZThon"
 
 
-@zedub.zed_cmd(pattern="رقص$")
-async def _(event):
-    event = await edit_or_reply(event, "👏.")
-    deq = deque(list("👏💃👏💃👏💃👏💃"))
-    for _ in range(48):
-        await asyncio.sleep(0.1)
-        await event.edit("".join(deq))
-        deq.rotate(1)
-
-
 @zedub.zed_cmd(pattern="مستطيل$")
 async def _(event):
     animation_interval = 0.3
