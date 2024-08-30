@@ -430,7 +430,7 @@ _/)______./¯"""/') ___/)___/)__,-----------’)_• ___/)_/)__./¯/)/)
 ]
 
 
-@zedub.zed_cmd(pattern="احبك")
+@zedub.zed_cmd(pattern="أاساسلاصاصا")
 async def _(zedub):
     zzz = random.choice(love)
     return await edit_or_reply(zedub, zzz)
@@ -439,7 +439,6 @@ async def _(zedub):
 Fun7_cmd = (
 "**╮•❐ اوامـر تسليـه متحـركه 7 ⦂ **\n\n"
 "  •  `.تهكير`\n\n"
-"  •  `.احبك`\n\n"
 "  •  `.لوف` + سمايل\n\n"
 "  •  `.اكتب` + نص\n\n"
 "  •  `.رساله` + نص او بالـرد ع نص\n\n"
