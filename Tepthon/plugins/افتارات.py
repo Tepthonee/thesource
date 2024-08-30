@@ -44,27 +44,6 @@ async def _(event):
         await zzevent.edit("**╮•⎚ عـذرًا .. لـم استطـع ايجـاد المطلـوب ☹️💔**")
 
 
-@zedub.zed_cmd(pattern="ستوري انمي$")
-async def _(event):
-    zzevent = await edit_or_reply(event, "**╮•⎚ جـارِ تحميـل الستـوري ...**")
-    try:
-        ZTHONR = [
-            zlzzl
-            async for zlzzl in event.client.iter_messages(
-                "@AA_Zll", filter=InputMessagesFilterVideo
-            )
-        ]
-        aing = await event.client.get_me()
-        await event.client.send_file(
-            event.chat_id,
-            file=random.choice(ZTHONR),
-            caption=f"**🎆┊ستـوريات آنمـي قصيـرة 🖤🧧**\n\n[➧𝙎𝙊𝙐𝙍𝘾𝙀 𝙏𝙀𝙋𝙏𝙃𝙊𝙉](https://t.me/Tepthon)",
-        )
-        await zzevent.delete()
-    except Exception:
-        await zzevent.edit("**╮•⎚ عـذرًا .. لـم استطـع ايجـاد المطلـوب ☹️💔**")
-
-
 @zedub.zed_cmd(pattern="رقيه$")
 async def _(event):
     zzevent = await edit_or_reply(event, "**╮•⎚ جـارِ تحميـل الرقيـه ...**")
@@ -86,7 +65,7 @@ async def _(event):
         await zzevent.edit("**╮•⎚ عذرًا .. لـم استطـع ايجـاد المطلـوب ☹️💔**")
 
 
-@zedub.zed_cmd(pattern="رمادي$")
+@zedub.zed_cmd(pattern="ممنوع أخي الكريممم$")
 async def _(event):
     zzevent = await edit_or_reply(event, "**╮•⎚ جـارِ تحميـل الافتـار ...**")
     try:
@@ -101,69 +80,6 @@ async def _(event):
             event.chat_id,
             file=random.choice(zedph),
             caption=f"**◞افتـارات شبـاب رماديـة ➧🎆🖤◟**\n\n[➧𝙎𝙊𝙐𝙍𝘾𝙀 𝙏𝙀𝙋𝙏𝙃𝙊𝙉](https://t.me/Tepthon)",
-        )
-        await zzevent.delete()
-    except Exception:
-        await zzevent.edit("**╮•⎚ عذرًا .. لـم استطـع ايجـاد المطلـوب ☹️💔**")
-
-
-@zedub.zed_cmd(pattern="نووووووووهههههه$")
-async def _(event):
-    zzevent = await edit_or_reply(event, "**╮•⎚ جـارِ تحميـل الافتـار ...**")
-    try:
-        zedph = [
-            zelzal
-            async for zelzal in event.client.iter_messages(
-                "@banatttR", filter=InputMessagesFilterPhotos
-            )
-        ]
-        aing = await event.client.get_me()
-        await event.client.send_file(
-            event.chat_id,
-            file=random.choice(zedph),
-            caption=f"**◞افتـارات بنـات ࢪمـاديه ➧🎆🤎◟**\n\n[➧𝙎𝙊𝙐𝙍𝘾𝙀 𝙏𝙀𝙋𝙏𝙃𝙊𝙉](https://t.me/Tepthon)",
-        )
-        await zzevent.delete()
-    except Exception:
-        await zzevent.edit("**╮•⎚ عذرًا .. لـم استطـع ايجـاد المطلـوب ☹️💔**")
-
-
-@zedub.zed_cmd(pattern="نوهههههههووو$")
-async def _(event):
-    zzevent = await edit_or_reply(event, "**╮ - جـارِ تحميـل الآفتـار ...🧚🏻‍♀🧚🏻‍♀╰**")
-    try:
-        zedph = [
-            zelzal
-            async for zelzal in event.client.iter_messages(
-                "@Tatkkkkkim", filter=InputMessagesFilterPhotos
-            )
-        ]
-        aing = await event.client.get_me()
-        await event.client.send_file(
-            event.chat_id,
-            file=random.choice(zedph),
-            caption=f"**◞افتـارات بيست تطقيـم بنـات ➧🎆🧚🏻‍♀🧚🏻‍♀◟**\n\n[➧𝙎𝙊𝙐𝙍𝘾𝙀 𝙏𝙀𝙋𝙏𝙃𝙊𝙉](https://t.me/Tepthon)",
-        )
-        await zzevent.delete()
-    except Exception:
-        await zzevent.edit("**╮•⎚ عذرًا .. لـم استطـع ايجـاد المطلـوب ☹️💔**")
-
-
-@zedub.zed_cmd(pattern="نوهههوووو$")
-async def _(event):
-    zzevent = await edit_or_reply(event, "**╮ - جـارِ تحميـل الآفتـار ...♥️╰**")
-    try:
-        zedph = [
-            zelzal
-            async for zelzal in event.client.iter_messages(
-                "@tatkkkkkimh", filter=InputMessagesFilterPhotos
-            )
-        ]
-        aing = await event.client.get_me()
-        await event.client.send_file(
-            event.chat_id,
-            file=random.choice(zedph),
-            caption=f"**◞افتـارات حـب تمبلـرࢪ ➧🎆♥️◟**\n\n[➧𝙎𝙊𝙐𝙍𝘾𝙀 𝙏𝙀𝙋𝙏𝙃𝙊𝙉](https://t.me/Tepthon)",
         )
         await zzevent.delete()
     except Exception:
@@ -353,69 +269,6 @@ async def _(event):
             event.chat_id,
             file=random.choice(zedph),
             caption=f"**✦┊لـو خيـروك  ➧⁉️🌉◟**\n\n[➧𝙎𝙊𝙐𝙍𝘾𝙀 𝙏𝙀𝙋𝙏𝙃𝙊𝙉](https://t.me/Tepthon)",
-        )
-        await zzevent.delete()
-    except Exception:
-        await zzevent.edit("**╮•⎚ عـذرًا .. لـم استطـع ايجـاد المطلـوب ☹️💔**")
-
-
-@zedub.zed_cmd(pattern="ولد انمي$")
-async def _(event):
-    zzevent = await edit_or_reply(event, "**╮ - جـارِ تحميـل الآفتـار ...𓅫╰**")
-    try:
-        zedph = [
-            zelzal
-            async for zelzal in event.client.iter_messages(
-                "@dnndxn", filter=InputMessagesFilterPhotos
-            )
-        ]
-        aing = await event.client.get_me()
-        await event.client.send_file(
-            event.chat_id,
-            file=random.choice(zedph),
-            caption=f"**◞افتـارات آنمي شبـاب ➧🎆🙋🏻‍♂◟**\n\n[➧𝙎𝙊𝙐𝙍𝘾𝙀 𝙏𝙀𝙋𝙏𝙃𝙊𝙉](https://t.me/Tepthon)",
-        )
-        await zzevent.delete()
-    except Exception:
-        await zzevent.edit("**╮•⎚ عـذرًا .. لـم استطـع ايجـاد المطلـوب ☹️💔**")
-
-
-@zedub.zed_cmd(pattern="بنت انمي$")
-async def _(event):
-    zzevent = await edit_or_reply(event, "**╮ - جـارِ تحميـل الآفتـار ...𓅫╰**")
-    try:
-        zedph = [
-            zelzal
-            async for zelzal in event.client.iter_messages(
-                "@shhdhn", filter=InputMessagesFilterPhotos
-            )
-        ]
-        aing = await event.client.get_me()
-        await event.client.send_file(
-            event.chat_id,
-            file=random.choice(zedph),
-            caption=f"**◞افتـارات آنمي بنـات ➧🎆🧚🏻‍♀◟**\n\n[➧𝙎𝙊𝙐𝙍𝘾𝙀 𝙏𝙀𝙋𝙏𝙃𝙊𝙉](https://t.me/Tepthon)",
-        )
-        await zzevent.delete()
-    except Exception:
-        await zzevent.edit("**╮•⎚ عـذرًا .. لـم استطـع ايجـاد المطلـوب ☹️💔**")
-
-
-@zedub.zed_cmd(pattern="$صورة تمبلر")
-async def _(event):
-    zzevent = await edit_or_reply(event, "**╮ - جـارِ العثـور علـى صـور تمبلـر انتظـر ..**")
-    try:
-        zedph = [
-            zelzal
-            async for zelzal in event.client.iter_messages(
-                "@N1NNNN", filter=InputMessagesFilterPhotos
-            )
-        ]
-        aing = await event.client.get_me()
-        await event.client.send_file(
-            event.chat_id,
-            file=random.choice(zedph),
-            caption=f"**◞صور تمبلـر ✨**\n\n[➧𝙎𝙊𝙐𝙍𝘾𝙀 𝙏𝙀𝙋𝙏𝙃𝙊𝙉](https://t.me/Tepthon)",
         )
         await zzevent.delete()
     except Exception:
