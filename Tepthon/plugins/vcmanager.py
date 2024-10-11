@@ -1,10 +1,10 @@
-# تعريب وتحديث فريق تيـبثون
-# Tepthon UsetBot T.me/Tepthon
-# Devolper Baqir T.me/E_7_V
+# تعريب وتحديث فريق زدثــون
+# ZThon UsetBot T.me/ZedThon
+# Devolper ZelZal T.me/zzzzl1l
 from telethon import functions
 from telethon.errors import ChatAdminRequiredError, UserAlreadyInvitedError
 from telethon.tl.types import Channel, Chat, User
-from Tepthon import zedub
+from . import zedub
 from ..core.managers import edit_delete, edit_or_reply
 from ..helpers.utils import mentionuser
 
