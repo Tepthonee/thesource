@@ -23,7 +23,7 @@ class Stream(Enum):
 
 
 def get_cookies_file():
-    folder_path = f"{os.getcwd()}/zion"
+    folder_path = f"{os.getcwd()}/zedub"
     txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
     if not txt_files:
         raise FileNotFoundError("No .txt files found in the specified folder.")
