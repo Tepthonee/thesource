@@ -15,7 +15,7 @@ from ..Config import Config
 from ..core.logger import logging
 from ..core.managers import edit_delete, edit_or_reply
 from ..helpers.functions import delete_conv
-from . import BOTLOG, BOTLOG_CHATID, zq_lo, reply_id
+from . import BOTLOG, BOTLOG_CHATID, zedub, reply_id
 
 LOGS = logging.getLogger(__name__)
 
@@ -32,7 +32,7 @@ def resize_image(image):
     im.save(image, "PNG")
 
 
-@zq_lo.rep_cmd(
+@zedub.zed_cmd(
     pattern="(ت(ل)?ك(راف)?) ?(m|t|ميديا|نص)(?:\s|$)([\s\S]*)",
     command=("تلكراف", plugin_category),
     info={
@@ -130,7 +130,7 @@ async def _(event):
         )
 
 
-@zq_lo.rep_cmd(
+@zedub.zed_cmd(
     pattern="ctg(?: |$)([\s\S]*)",
     command=("ctg", plugin_category),
     info={
@@ -159,7 +159,7 @@ async def ctg(event):
             await edit_or_reply(
                 zedevent, "**Error:** Trying to unblock & retry, wait a sec..."
             )
-            await zq_lo(unblock("chotamreaderbot"))
+            await zedub(unblock("chotamreaderbot"))
             msg_flag = await conv.send_message(urls[0])
         response = await conv.get_response()
         await event.client.send_read_acknowledge(conv.chat_id)
