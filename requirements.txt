@@ -78,5 +78,4 @@ youtube-search
 youtube_dl
 yt-dlp==2024.7.16
 img2html
-googletrans==3.1.0a0
 googletrans-py
