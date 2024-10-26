@@ -1,4 +1,4 @@
-# telegraph utils for Zthon
+# telegraph utils for ZThon
 import os
 import random
 import string
@@ -57,7 +57,7 @@ async def _(event):
     if BOTLOG:
         await event.client.send_message(
             BOTLOG_CHATID,
-            f"**⌔∮ تم إنشاء حساب تيليجـراف جديد {auth_url} للدورة الحالية‌‌** \n**⌔∮ لا تعطي عنوان الرابـط هـذا لأي شـخص**",
+            f"**⎉╎ تم إنشاء حساب تيليجـراف جديد {auth_url} للدورة الحالية‌‌** \n**⎉╎ لا تعطي عنوان الرابـط هـذا لأي شـخص**",
         )
     optional_title = event.pattern_match.group(5)
     if not event.reply_to_msg_id:
@@ -72,9 +72,7 @@ async def _(event):
         downloaded_file_name = await event.client.download_media(
             r_message, Config.TEMP_DIR
         )
-        end = datetime.now()
-        ms = (end - start).seconds
-        await zedevent.edit(f"** ⪼ تم تحميل {downloaded_file_name} في وقت {ms} ثانيه.**")
+        await zedevent.edit(f"** ⪼ تم تحميل** {downloaded_file_name} **.. بنجـاح**")
         if downloaded_file_name.endswith((".webp")):
             resize_image(downloaded_file_name)
         try:
@@ -87,8 +85,8 @@ async def _(event):
             ms = (end - start).seconds
             os.remove(downloaded_file_name)
             await zedevent.edit(
-                f"**⌔∮الــرابـط : **[اضغــط هنـــا](https://graph.org{media_urls[0]})\
-                    \n**⌔∮الـوقـت : **`{ms} seconds.`",
+                f"**⎉╎الــرابـط : ** [اضغــط هنـــا](https://graph.org{media_urls[0]})\
+                    \n**⎉╎الـوقـت : **`{ms} seconds.`",
                 link_preview=True,
             )
     elif input_str in ["نص", "t"]:
@@ -122,7 +120,7 @@ async def _(event):
             response = telegraph.create_page(title_of_page, html_content=page_content)
         end = datetime.now()
         ms = (end - start).seconds
-        zed = f"https://graph.org/{response['path']}"
+        zed = f"https://telegra.ph/{response['path']}"
         await zedevent.edit(
             f"**link : ** [telegraph]({zed})\
                  \n**Time Taken : **`{ms} seconds.`",
