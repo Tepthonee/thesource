@@ -85,7 +85,7 @@ async def _(event):
             ms = (end - start).seconds
             os.remove(downloaded_file_name)
             await zedevent.edit(
-                f"**⎉╎الــرابـط : ** [اضغــط هنـــا](https://graph.org{media_urls[0]})\
+                f"**⎉╎الــرابـط : ** [اضغــط هنـــا](https://envs.sh/{media_urls[0]})\
                     \n**⎉╎الـوقـت : **`{ms} seconds.`",
                 link_preview=True,
             )
