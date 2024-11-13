@@ -14,7 +14,7 @@ __copyright__ = "TEPTHON TEAM (C) 2021 - 2024  " + __author__
 
 zedub.version = __version__
 zedub.tgbot.version = __version__
-LOGS = logging.getLogger("jepthon")
+LOGS = logging.getLogger("تيبثون")
 bot = zedub
 
 StartTime = time.time()
