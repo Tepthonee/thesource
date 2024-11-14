@@ -18,7 +18,7 @@ LOGS = logging.getLogger("تيبثون")
 bot = zedub
 
 StartTime = time.time()
-zedversion = "3.2.0"
+tepversion = "3.2.0"
 
 
 if Config.UPSTREAM_REPO == "Tepthonee":
