@@ -1,6 +1,7 @@
 Telethon
 telethon-session-sqlalchemy
 setuptools
+moviepy
 wheel
 gunicorn
 flask
