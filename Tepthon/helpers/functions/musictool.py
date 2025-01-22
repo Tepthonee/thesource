@@ -99,9 +99,9 @@ async def song_download(url, event, quality="128k", video=False, title=True):
         media_file = Path(f"{media_name}.{media_ext[1]}")
     elif not os.path.exists(media_file):
         return await edit_or_reply(
-            event, f"**- عـذراً .. لا يمكنني العثور على {media_type} ⁉️**"
+            event, f"**- عـذرًا .. لا يمكنني العثور على {media_type} ⁉️**"
         )
-    await edit_or_reply(event, f"**- جـارِ تحميـل {media_type} ▬▭...**")
+    await edit_or_reply(event, f"**- جـاري تحميـل {media_type} ▬▭...**")
     media_thumb = Path(f"{media_name}.jpg")
     if not os.path.exists(media_thumb):
         media_thumb = Path(f"{media_name}.webp")
