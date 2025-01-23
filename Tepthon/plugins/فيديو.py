@@ -3,7 +3,7 @@ import glob
 import asyncio
 import yt_dlp
 import os
-from telethon import TelegramClient, events
+from telethon import events
 from yt_dlp import YoutubeDL
 from Tepthon import zedub
 from ..Config import Config
@@ -20,14 +20,14 @@ def get_cookies_file():
 
 @zedub.on(events.NewMessage(pattern='.تحميل (.*)'))
 async def download_video(event):
-    # تأكد أن المرسل هو صاحب الحساب
-    if event.sender_id != event.chat_id:
-        return  # إذا لم يكن المرسل هو صاحب الحساب، لا تفعل شيئًا
+    # تحقق مما إذا كان المستخدم هو صاحب الحساب
+    if event.sender_id != Config.OWNER_ID:  # استبدل Config.OWNER_ID بمعرف صاحب الحساب
+        return
 
     video_name = event.pattern_match.group(1)
     await event.reply(f"جاري البحث عن الفيديو المطلوب: {video_name}...")
 
-    # إعداد خيارات yt-dlp
+    # إعداد خيارات yt-dlp لتحميل الفيديو
     ydl_opts = {
         "format": "best",
         "outtmpl": "%(title)s.%(ext)s",
@@ -40,7 +40,7 @@ async def download_video(event):
             title = info['entries'][0]['title']
             filename = f"{title}.mp4"
 
-            await event.reply(f"تم العثور على الفيديو: {title}\nجاري إرسال الملف...")
+            await event.reply(f"تم العثور على الفيديو المطلوب: {title}\nجاري إرسال الملف...")
 
             # إرسال الملف إلى تيليجرام
             await zedub.send_file(event.chat_id, filename)
