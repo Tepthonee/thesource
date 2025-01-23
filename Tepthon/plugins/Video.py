@@ -1,5 +1,7 @@
 import random
 import glob
+import asyncio
+import yt_dlp
 import os
 from telethon import TelegramClient, events
 from yt_dlp import YoutubeDL
@@ -18,30 +20,27 @@ def get_cookies_file():
 
 @zedub.on(events.NewMessage(pattern='.تحميل (.*)'))
 async def download_video(event):
-    video_url = event.pattern_match.group(1)
-    await event.reply(f"جاري تحميل الفيديو من الرابط: {video_url}...")
+    # تأكد أن المرسل هو صاحب الحساب
+    if event.sender_id != event.chat_id:
+        return  # إذا لم يكن المرسل هو صاحب الحساب، لا تفعل شيئًا
+
+    video_name = event.pattern_match.group(1)
+    await event.reply(f"جاري البحث عن الفيديو المطلوب: {video_name}...")
 
     # إعداد خيارات yt-dlp
     ydl_opts = {
-        "format": "bestvideo+bestaudio/best",
+        "format": "best",
         "outtmpl": "%(title)s.%(ext)s",
         "cookiefile": get_cookies_file(),
-        "postprocessors": [
-            {"key": "FFmpegVideoConvertor", "preferedformat": "mp4"},
-            {"key": "FFmpegMetadata"},
-        ],
-        "logtostderr": False,
-        "quiet": True,
-        "no_warnings": True,
     }
 
     with YoutubeDL(ydl_opts) as ydl:
         try:
-            info = ydl.extract_info(video_url, download=True)
-            title = info['title']
+            info = ydl.extract_info(f"ytsearch:{video_name}", download=True)
+            title = info['entries'][0]['title']
             filename = f"{title}.mp4"
 
-            await event.reply(f"تم تحميل الفيديو: {title}.\nجاري إرسال الملف...")
+            await event.reply(f"تم العثور على الفيديو: {title}\nجاري إرسال الملف...")
 
             # إرسال الملف إلى تيليجرام
             await zedub.send_file(event.chat_id, filename)
@@ -49,4 +48,4 @@ async def download_video(event):
             # حذف الملف بعد الإرسال
             os.remove(filename)
         except Exception as e:
-            await event.reply(f"حدث خطأ أثناء تحميل الفيديو: {e}")
+            await event.reply(f"حدث خطأ أثناء البحث عن الفيديو: {e}")
