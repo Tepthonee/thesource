@@ -48,6 +48,14 @@ LOGS = logging.getLogger(__name__)
 
 plugin_category = "البحث"
 
+def get_cookies_file():
+    folder_path = f"{os.getcwd()}/rcookies"
+    txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
+    if not txt_files:
+        raise FileNotFoundError("No .txt files found in the specified folder.")
+    cookie_txt_file = random.choice(txt_files)
+    return cookie_txt_file
+
 
 video_opts = {
     "format": "best",
@@ -55,6 +63,7 @@ video_opts = {
     "key": "FFmpegMetadata",
     "writethumbnail": True,
     "prefer_ffmpeg": True,
+    "cookiefile" : get_cookies_file(),
     "geo_bypass": True,
     "nocheckcertificate": True,
     "postprocessors": [
