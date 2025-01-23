@@ -4,8 +4,8 @@ import asyncio
 import yt_dlp
 import os
 from telethon import events
+from telethon import Button
 from yt_dlp import YoutubeDL
-from Tepthon import zedub
 from ..Config import Config
 
 plugin_category = "البوت"
@@ -36,16 +36,47 @@ async def download_video(event):
 
     with YoutubeDL(ydl_opts) as ydl:
         try:
-            info = ydl.extract_info(f"ytsearch:{video_name}", download=True)
+            info = ydl.extract_info(f"ytsearch:{video_name}", download=False)  # لا تقم بالتنزيل هنا
             title = info['entries'][0]['title']
             filename = f"{title}.mp4"
 
-            await event.reply(f"تم العثور على الفيديو المطلوب: {title}\nجاري إرسال الملف...")
+            # أزرار لاختيار ما يريده الباحث
+            buttons = [
+                [Button.inline("تحميل الفيديو", data=f"download_{title}")],
+                [Button.inline("إلغاء", data="cancel")]
+            ]
 
-            # إرسال الملف إلى تيليجرام
-            await zedub.send_file(event.chat_id, filename)
+            await event.reply(f"تم العثور على الفيديو المطلوب: {title}\nاختر الإجراء:", buttons=buttons)
 
-            # حذف الملف بعد الإرسال
-            os.remove(filename)
         except Exception as e:
             await event.reply(f"حدث خطأ أثناء البحث عن الفيديو: {e}")
+
+@zedub.on(events.CallbackQuery(data=lambda data: data.startswith(b'download_')))
+async def on_download_button(event):
+    title = event.data.decode('utf-8').replace('download_', '')
+    
+    # إعداد خيارات yt-dlp لتحميل الفيديو مرة أخرى
+    ydl_opts = {
+        "format": "best",
+        "outtmpl": f"{title}.mp4",
+        "cookiefile": get_cookies_file(),
+    }
+
+    with YoutubeDL(ydl_opts) as ydl:
+        try:
+            await event.respond(f"جاري تحميل الفيديو: {title}...")
+            ydl.download([f"ytsearch:{title}"])  # تحميل الفيديو
+
+            # إرسال الملف إلى تيليجرام
+            await zedub.send_file(event.chat_id, f"{title}.mp4")
+
+            # حذف الملف بعد الإرسال
+            os.remove(f"{title}.mp4")
+            await event.respond("تم إرسال الفيديو بنجاح!")
+
+        except Exception as e:
+            await event.respond(f"حدث خطأ أثناء تحميل الفيديو: {e}")
+
+@zedub.on(events.CallbackQuery(data="cancel"))
+async def on_cancel(event):
+    await event.respond("تم إلغاء العملية.")
