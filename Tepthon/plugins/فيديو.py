@@ -2,7 +2,7 @@ import random
 import glob
 import asyncio
 import yt_dlp
-from Tepthon imoort zedub
+from Tepthon import zedub
 import os
 from telethon import events
 from telethon import Button
