@@ -24,7 +24,6 @@ def get_cookies_file():
 async def get_song(event) 
     if event.sender_id != Config.OWNER_ID:  # استبدل Config.OWNER_ID بمعرف صاحب الحساب
         return
-        
     song_name = event.pattern_match.group(1)
     await event.reply(f"جاري البحث عن المطلوب.: {song_name}...")
 
