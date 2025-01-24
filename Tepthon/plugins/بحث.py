@@ -29,7 +29,7 @@ async def search_video(event):
     ydl_opts = {
         "format": "best",
         "noplaylist": True,  # عدم تنزيل قوائم التشغيل
-        "cookies": get_cookies_file()  # استخدام الكوكيز
+        "cookies": get_cookies_file(),  # استخدام الكوكيز
     }
 
     with YoutubeDL(ydl_opts) as ydl:
