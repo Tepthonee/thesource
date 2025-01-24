@@ -43,7 +43,7 @@ async def download_video(event):
             title = info['title']
             filename = f"{title}.mp4"
 
-            await event.reply(f"تم تحميل الفيديو: {title}\nجاري إرسال الملف...")
+            await event.reply(f"࿊ تم تحميـل الفيديو: {title}\n⇜ انتظـر المعالجة جارية...")
 
             # إرسال الملف إلى تيليجرام
             await zedub.send_file(event.chat_id, filename)
@@ -51,4 +51,4 @@ async def download_video(event):
             # حذف الملف بعد الإرسال
             os.remove(filename)
         except Exception as e:
-            await event.reply(f"حدث خطأ أثناء تحميل الفيديو: {e}")
+            await event.reply(f"خطـــأ ❌: {e}")
