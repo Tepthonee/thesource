@@ -28,7 +28,7 @@ async def download_video(event):
         return
 
     video_url = event.pattern_match.group(1)
-    await event.reply(f"جاري تحميل الفيديو من: {video_url}...")
+    await event.reply(f"࿊ مرحبًــا بـك عزيزي المنصـب، جاري التحميـل من: {video_url}...")
 
     # إعداد خيارات yt-dlp
     ydl_opts = {
