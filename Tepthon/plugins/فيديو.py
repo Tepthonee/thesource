@@ -1,3 +1,4 @@
+#تيبثــون.
 import random
 import glob
 import asyncio
