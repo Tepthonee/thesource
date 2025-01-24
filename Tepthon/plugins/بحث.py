@@ -20,30 +20,43 @@ def get_cookies_file():
 
 @zedub.on(events.NewMessage(pattern='.بحث (.*)'))
 async def search_video(event):
-    # تحقق مما إذا كان المرسل هو الحساب المنصب فقط
     if event.sender_id != Config.OWNER_ID:
         return
 
     search_query = event.pattern_match.group(1)
     await event.reply(f"࿊ جاري البحث عن: {search_query}...")
 
-    # إعداد خيارات yt-dlp للبحث
     ydl_opts = {
         "format": "best",
         "noplaylist": True,  # عدم تنزيل قوائم التشغيل
+        "cookies": get_cookies_file()  # استخدام الكوكيز
     }
 
     with YoutubeDL(ydl_opts) as ydl:
         try:
-            results = ydl.extract_info(f"ytsearch10:{search_query}", download=False)['entries']
-            if results:
+            results = ydl.extract_info(f"ytsearch10:{search_query}", download=False)
+            if 'entries' in results and results['entries']:
+                # تقسيم النتائج عند الحاجة
                 reply_message = "نتائج البحث:\n"
-                for idx, video in enumerate(results, 1):
+                message_parts = []
+                for idx, video in enumerate(results['entries'], 1):
                     title = video['title']
                     url = video['url']
-                    reply_message += f"{idx}. {title} - {url}\n"
+                    new_entry = f"{idx}. {title} - {url}\n"
+                    
+                    # تحقق مما إذا كنت بحاجة لتقسيم الرسالة
+                    if len(reply_message) + len(new_entry) > 4096:  # الحد الأقصى لطول الرسالة
+                        message_parts.append(reply_message)
+                        reply_message = new_entry
+                    else:
+                        reply_message += new_entry
+                
+                if reply_message:
+                    message_parts.append(reply_message)
 
-                await event.reply(reply_message)
+                # إرسال الرسائل المقطعة
+                for part in message_parts:
+                    await event.reply(part)
             else:
                 await event.reply("لم يتم العثور على فيديوهات متطابقة.")
         except Exception as e:
