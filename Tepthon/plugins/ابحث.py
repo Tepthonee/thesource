@@ -3,6 +3,7 @@ import glob
 import os
 from yt_dlp import YoutubeDL
 from telethon import events
+from Tepthon import zedub
 from ..Config import Config
 
 plugin_category = "البوت"
