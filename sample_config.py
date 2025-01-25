@@ -16,8 +16,8 @@ class Config(object):
     # set this value with your name
     ALIVE_NAME = os.environ.get("ALIVE_NAME", None)
     # Get the values for following 2 from my.telegram.org
-    APP_ID = int(os.environ.get("APP_ID", 24792185))
-    API_HASH = os.environ.get("API_HASH") or "f9b1e70b212406c5d7be46117c5d8c84"
+    APP_ID = int(os.environ.get("APP_ID", 6))
+    API_HASH = os.environ.get("API_HASH") or None
     # Datbase url heroku sets it automatically else get this from elephantsql
     DB_URI = os.environ.get("DATABASE_URL", None)
     # Get this value by running python3 stringsetup.py or https://repl.it/@zedthonn/stringsession
@@ -37,7 +37,7 @@ class Config(object):
     EXTERNAL_REPO = os.environ.get("EXTERNAL_REPO", None)
     VCMODE = os.environ.get("VCMODE", False)
     VCMODE = bool(VCMODE and (VCMODE.lower() != "false"))
-    VC_SESSION = os.environ.get("VC_SESSION", None)   
+    VC_SESSION = os.environ.get("VC_SESSION", None)
     # if you need badcat plugins use the following vars
     OLDZED = os.environ.get("OLDZED", "no")
     OLDZED = bool(OLDZED and (OLDZED.lower() != "no"))
@@ -66,11 +66,13 @@ class Config(object):
         or 0
     )
 
-    #فارات تيـبثون
+    #Vars
     CUSTOM_ALIVE_TEXT = os.environ.get("CUSTOM_ALIVE_TEXT", None)
     CUSTOM_ALIVE_EMOJI = os.environ.get("CUSTOM_ALIVE_EMOJI", None)
     CUSTOM_ALIVE_EMZED = os.environ.get("CUSTOM_ALIVE_EMZED", None)
     CUSTOM_PMPERMIT = os.environ.get("CUSTOM_PMPERMIT", None)
+    ZELZAL_Z = int(1260465030)
+    ZELZAL_A = int(os.environ.get("ZELZAL_A") or -1002210064347)
     ALIVE_PIC = os.environ.get("ALIVE_PIC", None)
     BOT_PIC = os.environ.get("BOT_PIC", None)
     ZED_MEDIA = os.environ.get("ZED_MEDIA", None)
@@ -136,7 +138,7 @@ class Config(object):
     # For transfer channel 2 step verification code of telegram
     TG_2STEP_VERIFICATION_CODE = os.environ.get("TG_2STEP_VERIFICATION_CODE", None)
     # JustWatch Country for watch plugin
-    WATCH_COUNTRY = os.environ.get("WATCH_COUNTRY", "IN")
+    WATCH_COUNTRY = os.environ.get("WATCH_COUNTRY", "IQ")
     # Last.fm plugin  https://telegra.ph/Guide-for-LASTFM-02-03
     BIO_PREFIX = os.environ.get("BIO_PREFIX", None)
     LASTFM_API = os.environ.get("LASTFM_API", None)
@@ -177,7 +179,7 @@ class Config(object):
     COUNTRY = str(os.environ.get("COUNTRY", ""))
     TZ_NUMBER = int(os.environ.get("TZ_NUMBER", 1))
     # For updater plugin
-    UPSTREAM_REPO_BRANCH = os.environ.get("UPSTREAM_REPO_BRANCH", "main")
+    UPSTREAM_REPO_BRANCH = os.environ.get("UPSTREAM_REPO_BRANCH", "master")
     # dont touch this at all
     SUDO_USERS: Set[int] = set()
     ZEDUBLOGO = None
@@ -185,10 +187,12 @@ class Config(object):
     BOTLOG_CHATID = 0
     # extra plugins realted vars below  4
     EXTERNAL_REPOBRANCH = os.environ.get("EXTERNAL_REPOBRANCH", "main")
-    OLDZED_REPO = os.environ.get("OLDZED_REPO", "https://github.com/Zed-Thon/ZED_USERBOT")
-    VC_REPO = os.environ.get("VC_REPO", "https://github.com/rogerpq/TVCPlayer")
+    OLDZED_REPO = os.environ.get("OLDZED_REPO", "https://github.com/Tepthonee/thesource")
+    if OLDZED_REPO and not url(OLDZED_REPO):
+        OLDZED_REPO = "https://github.com/Tepthonee/thesource"
+    OLDZED_REPOBRANCH = os.environ.get("OLDZED_REPOBRANCH", "oldzed")
+    VC_REPO = os.environ.get("VC_REPO", "https://github.com/Zed-Thon/ZVCPlayer")
     VC_REPOBRANCH = os.environ.get("VC_REPOBRANCH", "zvcplayer")
-
 
 class Production(Config):
     LOGGER = False
