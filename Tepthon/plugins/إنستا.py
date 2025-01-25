@@ -2,6 +2,7 @@ import random
 import glob
 import os
 from yt_dlp import YoutubeDL
+from Tepthon import zedub
 from telethon import events
 from ..Config import Config
 
