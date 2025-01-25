@@ -1,12 +1,8 @@
-#باقر_ريبثون
 import random
 import glob
-import asyncio
-import yt_dlp
 import os
-from telethon import TelegramClient, events
 from yt_dlp import YoutubeDL
-from Tepthon import zedub
+from telethon import events
 from ..Config import Config
 
 plugin_category = "البوت"
@@ -19,13 +15,13 @@ def get_cookies_file():
     cookie_txt_file = random.choice(txt_files)
     return cookie_txt_file
 
-
 @zedub.on(events.NewMessage(pattern='.بحث (.*)'))
-async def get_song(event) 
+async def get_song(event):
     if event.sender_id != Config.OWNER_ID:  # استبدل Config.OWNER_ID بمعرف صاحب الحساب
         return
+    
     song_name = event.pattern_match.group(1)
-    await event.reply(f"جاري البحث عن المطلوب.: {song_name}...")
+    await event.reply(f"جاري البحث عن المطلوب: {song_name}...")
 
     # إعداد خيارات yt-dlp
     ydl_opts = {
@@ -37,16 +33,15 @@ async def get_song(event)
         "geo_bypass": True,
         "nocheckcertificate": True,
         "postprocessors": [
-            {"key": "FFmpegVideoConvertor", "preferedformat": "mp3"},
+            {"key": "FFmpegExtractAudio", "preferredformat": "mp3"},  # تصحيح الكتابة من "preferedformat" إلى "preferredformat"
             {"key": "FFmpegMetadata"},
-            {"key": "FFmpegExtractAudio"},
         ],
         "outtmpl": "%(title)s.%(ext)s",
         "logtostderr": False,
         "quiet": True,
         "no_warnings": True,
-        "cookiefile" : get_cookies_file(),
-   }
+        "cookiefile": get_cookies_file(),
+    }
 
     with YoutubeDL(ydl_opts) as ydl:
         try:
@@ -54,7 +49,7 @@ async def get_song(event)
             title = info['entries'][0]['title']
             filename = f"{title}.mp3"
 
-            await event.reply(f"تم العثور على المطلوب بحثه: {title}nجاري إرسال الملف...")
+            await event.reply(f"تم العثور على المطلوب: {title}، جاري إرسال الملف...")  # تصحيح الكتابة
 
             # إرسال الملف إلى تيليجرام
             await zedub.send_file(event.chat_id, filename)
