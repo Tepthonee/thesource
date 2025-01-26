@@ -11,6 +11,7 @@ aiohttp
 aiosqlite
 arabic_reshaper
 beautifulsoup4
+instaloader
 cloudscraper
 colour
 cowpy
