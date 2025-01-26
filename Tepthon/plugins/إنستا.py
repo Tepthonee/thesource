@@ -19,12 +19,12 @@ async def download_instagram_video(event):
     await event.reply(f"جاري تحميل الفيديو من الرابط: {post_url}...")
 
     try:
-        # استخراج الجزء الخاص بـ shortcode من الرابط
+        # استخراج جزء shortcode من الرابط
         shortcode = post_url.split("/")[-2]
         post = Post.from_shortcode(loader.context, shortcode)
 
         if post.is_video:  # تحقق من كون المنشور فيديو
-            filename = f"{shortcode}.mp4"  # اسم الملف المراد حفظه
+            filename = f"{shortcode}.mp4"  # اسم الملف الذي سيتم حفظه
 
             # تحميل الفيديو
             loader.download_post(post, target=filename)
@@ -37,6 +37,6 @@ async def download_instagram_video(event):
             # حذف الملف بعد الإرسال
             os.remove(filename)
         else:
-            await event.reply("هذا المنشور ليس فيديو.")
+            await event.reply("❌ هذا المنشور ليس فيديو.")
     except Exception as e:
-        await event.reply(f"حدث خطأ أثناء تحميل الفيديو: {e}")
+        await event.reply(f"خطأ ❌: {e}")
