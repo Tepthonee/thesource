@@ -10,8 +10,8 @@ aiofiles
 aiohttp
 aiosqlite
 arabic_reshaper
-beautifulsoup4
 instaloader
+beautifulsoup4
 cloudscraper
 colour
 cowpy
