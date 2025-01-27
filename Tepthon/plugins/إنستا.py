@@ -1,42 +1,61 @@
-import os
-from telethon import events
-from instaloader import Instaloader, Post
+#الجوكر
+from datetime import datetime
+from telethon.errors.rpcerrorlist import YouBlockedUserError
 from Tepthon import zedub
-from ..Config import Config
 
-plugin_category = "البوت"
+# تعريف فئة أو اسم للبلاجن
+plugin_category = "Instagram"
 
-# تهيئة Instaloader
-loader = Instaloader()
+@zedub.zed_cmd(
+    pattern="انستا (.*)",
+    command=("انستا", plugin_category),
+    info={
+        "header": "To download instagram video/photo",
+        "description": "Note downloads only public profile photos/videos.",
+        "examples": [
+            "{tr}insta <link>",
+        ],
+    },
+)
+async def kakashi(event):
+    "For downloading instagram media"
+    chat = "@instasavegrambot"
+    link = event.pattern_match.group(1)
 
-@zedub.on(events.NewMessage(pattern='.انستا (.*)'))
-async def download_instagram_video(event):
-    # تحقق مما إذا كان المرسل هو الحساب المنصب فقط
-    if event.sender_id != Config.OWNER_ID:  # استبدل Config.OWNER_ID بمعرف صاحب الحساب
-        return
+    # تحقق مما إذا كان الرابط صحيحًا
+    if "www.instagram.com" not in link:
+        return await edit_or_reply(event, "⎉╎ ضـع رابط الانستجرام بعــد الأمر أولًا")
 
-    post_url = event.pattern_match.group(1)
-    await event.reply(f"جاري تحميل الفيديو من الرابط: {post_url}...")
+    start = datetime.now()
+    catevent = await edit_or_reply(event, "⎉╎ جـــاري التحميــــل انتظـــر لُطفًــــا 🔍..")
 
-    try:
-        # استخراج جزء shortcode من الرابط
-        shortcode = post_url.split("/")[-2]
-        post = Post.from_shortcode(loader.context, shortcode)
+    async with event.client.conversation(chat) as conv:
+        try:
+            msg_start = await conv.send_message("/start")
+            response = await conv.get_response()
+            msg = await conv.send_message(link)
+            video = await conv.get_response()
+            details = await conv.get_response()
+            await event.client.send_read_acknowledge(conv.chat_id)
+        except YouBlockedUserError:
+            await catevent.edit("⎉╎ ألـــغِ حظـر البوت ثم أعــد المـحاولة @instasavegrambot")
+            return
+        except Exception as e:
+            await catevent.edit(f"⎉╎ خطــــــــأ ❌: {str(e)}")
+            return
 
-        if post.is_video:  # تحقق من كون المنشور فيديو
-            filename = f"{shortcode}.mp4"  # اسم الملف الذي سيتم حفظه
+    await catevent.delete()
+    
+    # إرسال الملف
+    cat = await event.client.send_file(event.chat_id, video)
 
-            # تحميل الفيديو
-            loader.download_post(post, target=filename)
+    end = datetime.now()
+    ms = (end - start).seconds
 
-            await event.reply(f"تم تحميل الفيديو بنجاح: {post.title}\n⇜ جاري إرسال الملف...")
+    await cat.edit(f"⎉╎ تم التنزيــل ♥️ : @Tepthon ", parse_mode="html")
 
-            # إرسال الملف إلى تيليجرام
-            await zedub.send_file(event.chat_id, filename)
-
-            # حذف الملف بعد الإرسال
-            os.remove(filename)
-        else:
-            await event.reply("❌ هذا المنشور ليس فيديو.")
-    except Exception as e:
-        await event.reply(f"خطأ ❌: {e}")
+    # حذف الرسائل المستخدمة في المحادثة
+    await event.client.delete_messages(
+        conv.chat_id, 
+        [msg_start.id, response.id, msg.id, video.id, details.id]
+    )
