@@ -36,6 +36,17 @@ from yt_dlp.utils import (
 from ..Config import Config
 from ..core import pool
 from ..core.logger import logging
+from ShazamAPI import Shazam
+from telethon import types
+from telethon.errors.rpcerrorlist import YouBlockedUserError
+from telethon.tl.functions.contacts import UnblockRequest as unblock
+from telethon.tl.functions.messages import ImportChatInviteRequest as Get
+from validators.url import url
+
+from ..core.logger import logging
+from your_yt_search_module import yt_search
+from ..core.managers import edit_delete, edit_or_reply
+from ..helpers.functions import delete_conv, yt_search
 from ..core.managers import edit_delete, edit_or_reply
 from ..helpers import progress, reply_id
 from ..helpers.functions import delete_conv
