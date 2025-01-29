@@ -383,7 +383,7 @@ from telethon.errors.rpcerrorlist import YouBlockedUserError
 from Tepthon import zedub
 
 
-@zedub.on(admin_cmd(pattern="تيك توك(?: |$)(.*)"))
+@zedub.on(admin_cmd(pattern="لاا توك(?: |$)(.*)"))
 async def _(event):
     if event.fwd_from:
         return
