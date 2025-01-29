@@ -1,11 +1,12 @@
 import base64
-from yt_dlp import YoutubeDL
 import contextlib
 import glob
 import io
 import os
 
 from ShazamAPI import Shazam
+from Tepthon import zedub
+from yt_dlp import YoutubeDL
 from telethon import types
 from telethon.errors.rpcerrorlist import YouBlockedUserError
 from telethon.tl.functions.contacts import UnblockRequest as unblock
