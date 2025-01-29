@@ -912,4 +912,4 @@ async def shazamcmd(event):
     )
     await zedevent.delete()
     if delete:
-        await delete_conv(event, chat, 
+        await delete_conv(event, chat, purgeflag)
