@@ -35,6 +35,14 @@ from ..helpers import progress, reply_id
 
 plugin_category = "misc"
 
+def get_cookies_file():
+    folder_path = f"{os.getcwd()}/rcookies"
+    txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
+    if not txt_files:
+        raise FileNotFoundError("No .txt files found in the specified folder.")
+    cookie_txt_file = random.choice(txt_files)
+    return cookie_txt_file
+    
 audio_opts = {
     "format": "bestaudio",
     "addmetadata": True,
@@ -42,6 +50,7 @@ audio_opts = {
     "writethumbnail": True,
     "prefer_ffmpeg": True,
     "geo_bypass": True,
+    "cookiefile": get_cookies_file(),
     "nocheckcertificate": True,
     "postprocessors": [
         {
@@ -62,6 +71,7 @@ video_opts = {
     "writethumbnail": True,
     "prefer_ffmpeg": True,
     "geo_bypass": True,
+    "cookiefile": get_cookies_file(),
     "nocheckcertificate": True,
     "postprocessors": [{"key": "FFmpegVideoConvertor", "preferedformat": "mp4"}],
     "outtmpl": "%(title)s.mp4",
@@ -72,7 +82,7 @@ video_opts = {
 
 async def ytdl_down(event, opts, url):
     try:
-        await event.edit("᯽︙ - يتم جلب البيانات انتظر قليلًا")
+        await event.edit("︙ - يتم جلب البيانات انتظر قليلًا")
         with YoutubeDL(opts) as ytdl:
             ytdl_data = ytdl.extract_info(url)
     except DownloadError as DE:
@@ -161,8 +171,8 @@ async def _get_file_name(path: pathlib.Path, full: bool = True) -> str:
 
 
 @zedub.zed_cmd(
-    pattern="تحميل ص(?: |$)(.*)",
-    command=("تحميل ص", plugin_category),
+    pattern="تنزيل ص(?: |$)(.*)",
+    command=("تنزيل ص", plugin_category),
     info={
         "header": "To download audio from many sites like Youtube",
         "description": "downloads the audio from the given link (Suports the all sites which support youtube-dl)",
