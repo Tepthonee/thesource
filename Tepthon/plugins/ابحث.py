@@ -171,8 +171,8 @@ async def _get_file_name(path: pathlib.Path, full: bool = True) -> str:
 
 
 @zedub.zed_cmd(
-    pattern="تحميل ص(?: |$)(.*)",
-    command=("تحميل ص", plugin_category),
+    pattern="بحث(?: |$)(.*)",
+    command=("بحث", plugin_category),
     info={
         "header": "To download audio from many sites like Youtube",
         "description": "downloads the audio from the given link (Suports the all sites which support youtube-dl)",
