@@ -20,6 +20,7 @@ from telethon.tl.functions.contacts import UnblockRequest as unblock
 from telethon.utils import get_attributes
 from urlextract import URLExtract
 from wget import download
+from your_imported_modules import LOGS, yt_search, media_type, edit_or_reply, edit_delete, delete_conv
 from yt_dlp import YoutubeDL
 from yt_dlp.utils import (
     ContentTooShortError,
