@@ -17,7 +17,7 @@ def get_cookies_file():
         raise FileNotFoundError("No .txt files found in the specified folder.")
     cookie_txt_file = random.choice(txt_files)
     return cookie_txt_file
-    
+
 @zedub.on(events.NewMessage(pattern='.بحث (.*)'))
 async def get_song(event):
     song_name = event.pattern_match.group(1)
@@ -27,8 +27,6 @@ async def get_song(event):
     ydl_opts = {
         "format": "bestaudio/best",
         "addmetadata": True,
-        "cookiefile": get_cookies_file(),
-        "writethumbnail": False,
         "prefer_ffmpeg": True,
         "geo_bypass": True,
         "nocheckcertificate": True,
@@ -39,6 +37,7 @@ async def get_song(event):
         "outtmpl": "%(title)s.%(ext)s",
         "quiet": True,
         "no_warnings": True,
+        "cookiefile": get_cookies_file(),
     }
 
     with YoutubeDL(ydl_opts) as ydl:
@@ -55,7 +54,7 @@ async def get_song(event):
 
                 # حذف الملف بعد إرساله
                 os.remove(filename)
-                await event.edit("**⎉╎ تم إرسال الملف بنجاح! 🎶**")
+                await event.edit("**⎉╎ تم إرسال الملف بنجاح!**")
             else:
                 await event.edit("**⎉╎ لم أتمكن من العثور على الملف المُنتج.**")
 
