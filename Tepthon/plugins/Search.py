@@ -2,9 +2,8 @@ import random
 import glob
 import os
 from yt_dlp import YoutubeDL
-from telethon import events
 from Tepthon import zedub
-from telethon.tl.types import InputMessagesFilterVideo
+from telethon import events
 
 # دالة للحصول على ملف الكوكيز بشكل عشوائي
 def get_cookies_file():
@@ -22,16 +21,12 @@ async def get_video(event):
     await event.edit("⎉╎ جــاري البحــث عن المطلـوب 🎥..")
 
     ydl_opts = {
-        "format": "best",
-        "outtmpl": "%(title)s.%(ext)s",
-        "postprocessors": [{
-            "key": "FFmpegVideoConvertSegment",
-            "preferedformat": "mp4",
-            "outtmpl": "%(title)s.%(ext)s"
-        }],
-        "cookiefile": get_cookies_file(),
-        "quiet": True,
-        "no_warnings": True,
+        'format': 'bestvideo+bestaudio/best',
+        'outtmpl': '%(title)s.%(ext)s',
+        'merge_output_format': 'mp4',
+        'cookiefile': get_cookies_file(),
+        'quiet': True,
+        'no_warnings': True,
     }
 
     try:
