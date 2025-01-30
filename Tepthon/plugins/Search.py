@@ -3,6 +3,7 @@ import glob
 import yt_dlp
 import os
 from youtube_dl import YoutubeDL
+from Tepthon import zedub
 from telethon import events
 import asyncio
 
