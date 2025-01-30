@@ -1,14 +1,10 @@
 import random
 import glob
-import asyncio
 import yt_dlp
 import os
-from telethon import TelegramClient, events
-from yt_dlp import YoutubeDL
-from Tepthon import zedub
-from ..Config import Config
-
-plugin_category = "البوت"
+from youtube_dl import YoutubeDL
+from telethon import events
+import asyncio
 
 def get_cookies_file():
     folder_path = f"{os.getcwd()}/rcookies"
@@ -22,7 +18,7 @@ def get_cookies_file():
 async def get_song(event):
     song_name = event.pattern_match.group(1)
     
-    await event.edit("**⎉╎ جــاري البحــث عن المطلـوب 🎧..**")
+    await event.edit("⎉╎ جــاري البحــث عن المطلـوب 🎧..")
 
     ydl_opts = {
         "format": "bestaudio/best",
@@ -33,7 +29,7 @@ async def get_song(event):
         "geo_bypass": True,
         "nocheckcertificate": True,
         "postprocessors": [
-            {"key": "FFmpegVideoConvertor", "preferedformat": "mp3"},
+            {"key": "FFmpegExtractAudio", "preferredformat": "mp3"},
             {"key": "FFmpegMetadata"},
         ],
         "outtmpl": "%(title)s.%(ext)s",
@@ -41,23 +37,23 @@ async def get_song(event):
         "quiet": True,
         "no_warnings": True,
         "cookiefile": get_cookies_file(),
-        # إلغاء تفعيل حد حجم الملف
-        # "max_filesize": "50M", # عين الحجم الذي تريده أو ألغ هذا السطر
     }
 
-    with YoutubeDL(ydl_opts) as ydl:
-        try:
+    try:
+        with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(f"ytsearch:{song_name}", download=True)
             title = info['entries'][0]['title']
             filename = f"{title}.mp3"
 
-            await event.edit(f"**⎉╎ تم العثـور علـى المطلـوب، جـاري إرسال الملـف ♥️..**")
+            if os.path.exists(filename):
+                await event.edit(f"⎉╎ تم العثـور علـى المطلـوب، جـاري إرسال الملـف ♥️..")
+                
+                caption = "⎉╎ تم التنزيـل : @Tepthon"
+                await zedub.send_file(event.chat_id, filename, caption=caption)
 
-            caption = "**⎉╎ تم التنزيـل : @Tepthon**"
-            await zedub.send_file(event.chat_id, filename, caption=caption)
-
-            os.remove(filename)
-
-            await event.edit("**⎉╎ تم إرسال الملف بنجاح! 🎶**")
-        except Exception as e:
-            await event.edit(f"**⎉╎ حدث خطـأ: {e}**")
+                os.remove(filename)
+                await event.edit("⎉╎ تم إرسال الملف بنجاح! 🎶")
+            else:
+                await event.edit("⎉╎ لم يتم العثور على الملف بعد التحميل.")
+    except Exception as e:
+        await event.edit(f"⎉╎ حدث خطـأ: {e}")
