@@ -26,7 +26,6 @@ async def get_song(event):
             {
                 "key": "FFmpegExtractAudio",
                 "preferredquality": "192",  # نوع الجودة (اختياري)
-                "ext": "mp3",
             }
         ],
         "outtmpl": "%(title)s.%(ext)s",
