@@ -10,8 +10,7 @@ def get_cookies_file():
     txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
     if not txt_files:
         raise FileNotFoundError("No .txt files found in the specified folder.")
-    cookie_txt_file = random.choice(txt_files)
-    return cookie_txt_file
+    return random.choice(txt_files)
 
 @zedub.on(events.NewMessage(pattern='.بحث (.*)'))
 async def get_song(event):
@@ -30,7 +29,7 @@ async def get_song(event):
         "postprocessors": [
             {
                 "key": "FFmpegExtractAudio",
-                "preferredquality": "192",  # تحديد جودة الصوت
+                "preferredquality": "192",
             },
             {"key": "FFmpegMetadata"},
         ],
@@ -41,22 +40,21 @@ async def get_song(event):
         "cookiefile": get_cookies_file(),
     }
 
-try:
-    with YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(f"ytsearch:{song_name}", download=True)
-        title = info['entries'][0]['title']
-        filename = f"{title}.mp3"
-        print(f"اسم الملف الناتج: {filename}")
+    try:
+        with YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(f"ytsearch:{song_name}", download=True)
+            title = info['entries'][0]['title']
+            filename = f"{title}.mp3"
+            print(f"اسم الملف الناتج: {filename}")
 
-        if os.path.exists(filename):
-            await event.edit(f"⎉╎ تم العثـور علـى المطلـوب، جـاري إرسال الملـف ♥️..")
-            caption = "⎉╎ تم التنزيـل : @Tepthon"
-            await zedub.send_file(event.chat_id, filename, caption=caption)
+            if os.path.exists(filename):
+                await event.edit(f"⎉╎ تم العثـور علـى المطلـوب، جـاري إرسال الملـف ♥️..")
+                caption = "⎉╎ تم التنزيـل : @Tepthon"
+                await zedub.send_file(event.chat_id, filename, caption=caption)
 
-            os.remove(filename)
-            await event.edit("⎉╎ تم إرسال الملف بنجاح! 🎶")
-        else:
-            print("الملفات المتاحة في المجلد:", os.listdir(os.getcwd()))
-            await event.edit("⎉╎ لم يتم العثور على الملف بعد التحميل.")
-except Exception as e:
-    await event.edit(f"⎉╎ حدث خطـأ: {e}")
+                os.remove(filename)
+                await event.edit("⎉╎ تم إرسال الملف بنجاح! 🎶")
+            else:
+                await event.edit("⎉╎ لم يتم العثور على الملف بعد التحميل.")
+    except Exception as e:
+        await event.edit(f"⎉╎ حدث خطـأ: {e}")
