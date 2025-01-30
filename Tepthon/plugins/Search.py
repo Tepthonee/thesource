@@ -19,15 +19,12 @@ async def get_song(event):
     
     await event.edit("⎉╎ جــاري البحــث عن المطلـوب 🎧..")
 
-    # إعداد خيارات yt-dlp
     ydl_opts = {
         "format": "bestaudio/best",
-        "postprocessors": [
-            {
-                "key": "FFmpegExtractAudio",
-                "preferredquality": "192",  # نوع الجودة (اختياري)
-            }
-        ],
+        "postprocessors": [{
+            "key": "FFmpegExtractAudio",
+            "preferredquality": "192",
+        }],
         "outtmpl": "%(title)s.%(ext)s",
         "cookiefile": get_cookies_file(),
     }
@@ -37,15 +34,14 @@ async def get_song(event):
             info = ydl.extract_info(f"ytsearch:{song_name}", download=True)
             title = info['entries'][0]['title']
             filename = f"{title}.mp3"
+            full_path = os.path.join(os.getcwd(), filename)
 
-            # تعديل الرسالة
             await event.edit(f"⎉╎ تم العثـور علـى المطلـوب، جـاري إرسال الملـف ♥️..")
 
-            # تحقق من وجود الملف
-            if os.path.exists(filename):
+            if os.path.exists(full_path):
                 caption = "⎉╎ تم التنزيـل : @Tepthon"
-                await zedub.send_file(event.chat_id, filename, caption=caption)
-                os.remove(filename)  # حذف الملف بعد الإرسال
+                await zedub.send_file(event.chat_id, full_path, caption=caption)
+                os.remove(full_path)
                 await event.edit("⎉╎ تم إرسال الملف بنجاح! 🎶")
             else:
                 await event.edit("⎉╎ لم أتمكن من العثور على الملف الذي تم تحميله.")
