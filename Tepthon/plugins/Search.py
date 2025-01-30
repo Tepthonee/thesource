@@ -30,7 +30,7 @@ async def get_song(event):
         "postprocessors": [
             {
                 "key": "FFmpegExtractAudio",
-                "format": "mp3"  # استخدم "format" بدلاً من "preferredformat"
+                "preferredquality": "192",  # تحديد جودة الصوت
             },
             {"key": "FFmpegMetadata"},
         ],
