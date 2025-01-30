@@ -42,20 +42,21 @@ async def get_song(event):
     }
 
     try:
-        with YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(f"ytsearch:{song_name}", download=True)
-            title = info['entries'][0]['title']
-            filename = f"{title}.mp3"
+    with YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(f"ytsearch:{song_name}", download=True)
+        title = info['entries'][0]['title']
+        filename = f"{title}.mp3"
+        print(f"اسم الملف الناتج: {filename}")
 
-            if os.path.exists(filename):
-                await event.edit(f"⎉╎ تم العثـور علـى المطلـوب، جـاري إرسال الملـف ♥️..")
-                
-                caption = "⎉╎ تم التنزيـل : @Tepthon"
-                await zedub.send_file(event.chat_id, filename, caption=caption)
+        if os.path.exists(filename):
+            await event.edit(f"⎉╎ تم العثـور علـى المطلـوب، جـاري إرسال الملـف ♥️..")
+            caption = "⎉╎ تم التنزيـل : @Tepthon"
+            await zedub.send_file(event.chat_id, filename, caption=caption)
 
-                os.remove(filename)
-                await event.edit("⎉╎ تم إرسال الملف بنجاح! 🎶")
-            else:
-                await event.edit("⎉╎ لم يتم العثور على الملف بعد التحميل.")
-    except Exception as e:
-        await event.edit(f"⎉╎ حدث خطـأ: {e}")
+            os.remove(filename)
+            await event.edit("⎉╎ تم إرسال الملف بنجاح! 🎶")
+        else:
+            print("الملفات المتاحة في المجلد:", os.listdir(os.getcwd()))
+            await event.edit("⎉╎ لم يتم العثور على الملف بعد التحميل.")
+except Exception as e:
+    await event.edit(f"⎉╎ حدث خطـأ: {e}")
