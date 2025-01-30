@@ -1,11 +1,9 @@
 import random
 import glob
-import yt_dlp
 import os
-from youtube_dl import YoutubeDL
+from yt_dlp import YoutubeDL
 from Tepthon import zedub
 from telethon import events
-import asyncio
 
 def get_cookies_file():
     folder_path = f"{os.getcwd()}/rcookies"
@@ -30,7 +28,10 @@ async def get_song(event):
         "geo_bypass": True,
         "nocheckcertificate": True,
         "postprocessors": [
-            {"key": "FFmpegExtractAudio", "preferredformat": "mp3"},
+            {
+                "key": "FFmpegExtractAudio",
+                "format": "mp3"  # استخدم "format" بدلاً من "preferredformat"
+            },
             {"key": "FFmpegMetadata"},
         ],
         "outtmpl": "%(title)s.%(ext)s",
