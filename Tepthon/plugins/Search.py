@@ -41,7 +41,7 @@ async def get_song(event):
         "cookiefile": get_cookies_file(),
     }
 
-    try:
+try:
     with YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(f"ytsearch:{song_name}", download=True)
         title = info['entries'][0]['title']
