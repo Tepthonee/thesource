@@ -1,48 +1,66 @@
 import random
 import glob
+import asyncio
+import yt_dlp
 import os
+from telethon import TelegramClient, events
 from yt_dlp import YoutubeDL
 from Tepthon import zedub
-from telethon import events
+from ..Config import Config
 
-# دالة للحصول على ملف الكوكيز بشكل عشوائي
 def get_cookies_file():
     folder_path = f"{os.getcwd()}/rcookies"
     txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
     if not txt_files:
         raise FileNotFoundError("No .txt files found in the specified folder.")
-    return random.choice(txt_files)
+    cookie_txt_file = random.choice(txt_files)
+    return cookie_txt_file
 
-# التفاعل مع الأمر .بحث لتحميل الفيديو
 @zedub.on(events.NewMessage(pattern='.بحث (.*)'))
-async def get_video(event):
-    search_query = event.pattern_match.group(1)
+async def get_song(event):
+    song_name = event.pattern_match.group(1)
+    
+    # تعديل الرسالة الأصلية
+    await event.edit("**⎉╎ جــاري البحــث عن المطلـوب 🎧..**")
 
-    await event.edit("⎉╎ جــاري البحــث عن المطلـوب 🎥..")
-
+    # إعداد خيارات yt-dlp
     ydl_opts = {
-        'format': 'bestvideo+bestaudio/best',
-        'outtmpl': '%(title)s.%(ext)s',
-        'merge_output_format': 'mp4',
-        'cookiefile': get_cookies_file(),
-        'quiet': True,
-        'no_warnings': True,
+        "format": "bestaudio/best",
+        "addmetadata": True,
+        "key": "FFmpegMetadata",
+        "writethumbnail": False,
+        "prefer_ffmpeg": True,
+        "geo_bypass": True,
+        "nocheckcertificate": True,
+        "postprocessors": [
+            {"key": "FFmpegVideoConvertor", "preferedformat": "mp3"},
+            {"key": "FFmpegMetadata"},
+            {"key": "FFmpegExtractAudio"},
+        ],
+        "outtmpl": "%(title)s.%(ext)s",
+        "logtostderr": False,
+        "quiet": True,
+        "no_warnings": True,
+        "cookiefile": get_cookies_file(),
     }
 
-    try:
-        with YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(f"ytsearch:{search_query}", download=True)
+    with YoutubeDL(ydl_opts) as ydl:
+        try:
+            info = ydl.extract_info(f"ytsearch:{song_name}", download=True)
             title = info['entries'][0]['title']
-            filename = f"{title}.mp4"
+            filename = f"{title}.mp3"
 
-            if os.path.exists(filename):
-                await event.edit(f"⎉╎ تم العثـور علـى المطلـوب، جـاري إرسال الملـف ♥️..")
-                caption = "⎉╎ تم التنزيـل : @Tepthon"
-                await zedub.send_file(event.chat_id, filename, caption=caption)
+            # تعديل الرسالة مرة أخرى
+            await event.edit(f"**⎉╎ تم العثـور علـى المطلـوب، جـاري إرسال الملـف ♥️..**")
 
-                os.remove(filename)  # حذف الملف بعد الإرسال
-                await event.edit("⎉╎ تم إرسال الملف بنجاح! 🎶")
-            else:
-                await event.edit("⎉╎ لم يتم العثور على الملف بعد التحميل.")
-    except Exception as e:
-        await event.edit(f"⎉╎ حدث خطـأ: {e}")
+            # إرسال الملف مع وصف
+            caption = "**⎉╎ تم التنزيـل : @Tepthon**"
+            await zedub.send_file(event.chat_id, filename, caption=caption)
+
+            # حذف الملف بعد الإرسال
+            os.remove(filename)
+
+            # تعديل الرسالة النهائية
+            await event.edit("**⎉╎ تم إرسال الملف بنجاح! 🎶**")
+        except Exception as e:
+            await event.edit(f"**⎉╎ حدث خطـأ: {e}**")
