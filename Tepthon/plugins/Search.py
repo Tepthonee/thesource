@@ -25,6 +25,10 @@ async def search_song(event):
     except FileNotFoundError as e:
         return await event.reply(f"**خطأ: {e}**")
 
+    # إنشاء مجلد التنزيلات إذا لم يكن موجوداً
+    downloads_folder = './downloads'
+    os.makedirs(downloads_folder, exist_ok=True)
+
     # إعداد خيارات yt-dlp مع البحث في يوتيوب
     ydl_opts = {
         'format': 'bestaudio/best',
@@ -34,8 +38,9 @@ async def search_song(event):
             'preferredquality': '192',
         }],
         'cookiefile': cookies_file_path,
-        'outtmpl': './downloads/%(title)s.%(ext)s',
-        'default_search': 'ytsearch',  # إعداد البحث التلقائي في يوتيوب
+        'outtmpl': os.path.join(downloads_folder, '%(title)s.%(ext)s'),  # استخدام المسار الصحيح
+        'default_search': 'ytsearch',
+        'noplaylist': True,  # تحميل مقطع واحد
     }
 
     # البحث وتحميل الصوت
@@ -44,6 +49,10 @@ async def search_song(event):
         try:
             info = ydl.extract_info(query, download=True)
             filename = ydl.prepare_filename(info)
+
+            # التحقق من وجود الملف
+            if not os.path.exists(filename):
+                return await event.reply("**حدث خطأ: لم يتم العثور على الملف المحمل.**")
             
             # إرسال الملف
             await zedub.send_file(event.chat_id, filename, caption=f"تحميل: {info['title']}")
