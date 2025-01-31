@@ -32,26 +32,26 @@ async def get_song(event):
 
     try:
         with YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(f"ytsearch:{song_name}", download=False)  # استخدم download=False للتحقق فقط
-            duration = info['duration']  # الحصول على مدة الفيديو بالدقائق
+            info = ydl.extract_info(f"ytsearch:{song_name}", download=False)
             title = info['entries'][0]['title']
-            
+            duration = info['entries'][0].get('duration', 0)  # استخدام get للحصول على المدة
+
             # تحديد عتبة التحميل
             if duration >= 1800:  # 30 دقيقة بالثواني
                 download_with_ydl = True
             else:
-                download_with_ydl = True  # تحميل أيضًا الصوتيات القصيرة
+                download_with_ydl = True  # يمكنك أيضًا تحميل الصوتيات القصيرة
 
             if download_with_ydl:
-                filename = f"{title}.opus"  # تأكد من أن الامتداد صحيح
+                filename = f"{title}.opus"
                 full_path = os.path.join(os.getcwd(), filename)
 
                 await event.edit("⎉╎ تم العثـور علـى المطلـوب، جـاري إرسال الملـف ♥️..")
 
                 # بدء تنزيل الصوت
-                ydl_opts['download'] = True  # التأكد من أن التحميل مفعل الآن
+                ydl_opts['download'] = True
                 with YoutubeDL(ydl_opts) as ydl:
-                    ydl.download([info['url']])  # التنزيل باستخدام URL
+                    ydl.download([info['entries'][0]['url']])  # التنزيل باستخدام URL
 
                 # تحقق من وجود الملف بعد التنزيل
                 if os.path.exists(full_path):
@@ -63,7 +63,7 @@ async def get_song(event):
                     await event.edit("⎉╎ تم إرسال الملف بنجاح! 🎶")
                 else:
                     await event.edit("⎉╎ لم أتمكن من العثور على الملف الذي تم تحميله.")
-                    print(f"File not found: {full_path}")  # طباعة مسار الملف المفقود
+                    print(f"File not found: {full_path}")
 
     except Exception as e:
         await event.edit(f"⎉╎ حدث خطـأ: {e}")
