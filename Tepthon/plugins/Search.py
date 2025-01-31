@@ -25,7 +25,7 @@ async def get_song(event):
             "key": "FFmpegExtractAudio",
             "preferredquality": "192",
         }],
-        "outtmpl": "%(title)s.%(ext)s",  # حفظ الملف بتنسيق سليم
+        "outtmpl": os.path.join(os.getcwd(), "%(title)s.%(ext)s"),  # حفظ الملف بتنسيق سليم مع المسار الكامل
         "cookiefile": get_cookies_file(),
         "noplaylist": True  # عدم تنزيل قوائم التشغيل
     }
@@ -37,7 +37,7 @@ async def get_song(event):
             filename = f"{title}.mp3"
             full_path = os.path.join(os.getcwd(), filename)
 
-            await event.edit(f"⎉╎ تم العثـور علـى المطلـوب، جـاري إرسال الملـف ♥️..")
+            await event.edit("⎉╎ تم العثـور علـى المطلـوب، جـاري إرسال الملـف ♥️..")
 
             # تحقق من وجود الملف حالما يتم تنزيله
             if os.path.exists(full_path):
@@ -47,6 +47,8 @@ async def get_song(event):
                 await event.edit("⎉╎ تم إرسال الملف بنجاح! 🎶")
             else:
                 await event.edit("⎉╎ لم أتمكن من العثور على الملف الذي تم تحميله.")
+                print("File not found.")  # طباعة رسالة إذا لم يكن الملف موجودًا
 
     except Exception as e:
         await event.edit(f"⎉╎ حدث خطـأ: {e}")  # طباعة الخطأ للمساعدة في التصحيح
+        print(f"Error details: {e}")  # طباعة تفاصيل الخطأ
