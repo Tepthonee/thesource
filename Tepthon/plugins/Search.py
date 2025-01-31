@@ -16,7 +16,7 @@ def get_cookies_file():
 @zedub.on(events.NewMessage(pattern='.بحث (.*)'))
 async def get_song(event):
     song_name = event.pattern_match.group(1)
-    
+
     await event.edit("⎉╎ جــاري البحــث عن المطلـوب 🎧..")
 
     ydl_opts = {
@@ -34,7 +34,7 @@ async def get_song(event):
         with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(f"ytsearch:{song_name}", download=True)
             title = info['entries'][0]['title']
-            filename = f"{title}.opus"  # تأكد من امتداد الملف الصحيح بناءً على التحميل
+            filename = f"{title}.opus"  # تأكد من أن الامتداد صحيح
             full_path = os.path.join(os.getcwd(), filename)
 
             await event.edit("⎉╎ تم العثـور علـى المطلـوب، جـاري إرسال الملـف ♥️..")
@@ -43,7 +43,9 @@ async def get_song(event):
             if os.path.exists(full_path):
                 caption = "⎉╎ تم التنزيـل : @Tepthon"
                 await zedub.send_file(event.chat_id, full_path, caption=caption)
-                os.remove(full_path)  # احذف الملف بعد الإرسال
+
+                # حذف الملف بعد الإرسال فقط إذا كان قد تم إرساله بنجاح
+                os.remove(full_path)
                 await event.edit("⎉╎ تم إرسال الملف بنجاح! 🎶")
             else:
                 await event.edit("⎉╎ لم أتمكن من العثور على الملف الذي تم تحميله.")
