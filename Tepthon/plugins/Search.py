@@ -25,7 +25,7 @@ async def search_song(event):
     except FileNotFoundError as e:
         return await event.reply(f"**خطأ: {e}**")
 
-    # إعداد خيارات yt-dlp
+    # إعداد خيارات yt-dlp مع البحث في يوتيوب
     ydl_opts = {
         'format': 'bestaudio/best',
         'postprocessors': [{
@@ -35,11 +35,11 @@ async def search_song(event):
         }],
         'cookiefile': cookies_file_path,
         'outtmpl': './downloads/%(title)s.%(ext)s',
+        'default_search': 'ytsearch',  # إعداد البحث التلقائي في يوتيوب
     }
 
-    await event.reply("**جارِ البحث، يرجى الانتظار...**")
-    
     # البحث وتحميل الصوت
+    await event.reply("**جارِ البحث، يرجى الانتظار...**")
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         try:
             info = ydl.extract_info(query, download=True)
