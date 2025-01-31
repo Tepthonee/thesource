@@ -2,8 +2,8 @@ import random
 import glob
 import os
 from yt_dlp import YoutubeDL
-from telethon import events
 from Tepthon import zedub
+from telethon import events
 from ..Config import Config
 
 def get_cookies_file():
@@ -25,8 +25,9 @@ async def get_song(event):
             "key": "FFmpegExtractAudio",
             "preferredquality": "192",
         }],
-        "outtmpl": "%(title)s.%(ext)s",
+        "outtmpl": "%(title)s.%(ext)s",  # حفظ الملف بتنسيق سليم
         "cookiefile": get_cookies_file(),
+        "noplaylist": True  # عدم تنزيل قوائم التشغيل
     }
 
     try:
@@ -38,13 +39,14 @@ async def get_song(event):
 
             await event.edit(f"⎉╎ تم العثـور علـى المطلـوب، جـاري إرسال الملـف ♥️..")
 
+            # تحقق من وجود الملف حالما يتم تنزيله
             if os.path.exists(full_path):
                 caption = "⎉╎ تم التنزيـل : @Tepthon"
                 await zedub.send_file(event.chat_id, full_path, caption=caption)
-                os.remove(full_path)
+                os.remove(full_path)  # احذف الملف بعد الإرسال
                 await event.edit("⎉╎ تم إرسال الملف بنجاح! 🎶")
             else:
                 await event.edit("⎉╎ لم أتمكن من العثور على الملف الذي تم تحميله.")
 
     except Exception as e:
-        await event.edit(f"⎉╎ حدث خطـأ: {e}")
+        await event.edit(f"⎉╎ حدث خطـأ: {e}")  # طباعة الخطأ للمساعدة في التصحيح
