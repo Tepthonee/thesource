@@ -25,16 +25,16 @@ async def get_song(event):
             "key": "FFmpegExtractAudio",
             "preferredquality": "192",
         }],
-        "outtmpl": os.path.join(os.getcwd(), "%(title)s.%(ext)s"),  # حفظ الملف بتنسيق سليم مع المسار الكامل
+        "outtmpl": os.path.join(os.getcwd(), "%(title)s.%(ext)s"),
         "cookiefile": get_cookies_file(),
-        "noplaylist": True  # عدم تنزيل قوائم التشغيل
+        "noplaylist": True
     }
 
     try:
         with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(f"ytsearch:{song_name}", download=True)
             title = info['entries'][0]['title']
-            filename = f"{title}.mp3"
+            filename = f"{title}.opus"  # تأكد من امتداد الملف الصحيح بناءً على التحميل
             full_path = os.path.join(os.getcwd(), filename)
 
             await event.edit("⎉╎ تم العثـور علـى المطلـوب، جـاري إرسال الملـف ♥️..")
@@ -47,8 +47,8 @@ async def get_song(event):
                 await event.edit("⎉╎ تم إرسال الملف بنجاح! 🎶")
             else:
                 await event.edit("⎉╎ لم أتمكن من العثور على الملف الذي تم تحميله.")
-                print("File not found.")  # طباعة رسالة إذا لم يكن الملف موجودًا
+                print(f"File not found: {full_path}")  # طباعة مسار الملف المفقود
 
     except Exception as e:
-        await event.edit(f"⎉╎ حدث خطـأ: {e}")  # طباعة الخطأ للمساعدة في التصحيح
-        print(f"Error details: {e}")  # طباعة تفاصيل الخطأ
+        await event.edit(f"⎉╎ حدث خطـأ: {e}")
+        print(f"Error details: {e}")
