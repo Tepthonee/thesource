@@ -20,13 +20,10 @@ def get_cookies_file():
 async def get_song(event):
     song_name = event.pattern_match.group(1)
     
+    # تعديل الرسالة الأصلية
     await event.edit("⎉╎ جــاري البحــث عن المطلـوب 🎧..")
 
-    # تعريف دالة hook هنا
-    def hook(d):
-        if d['status'] == 'finished':
-            print(f"\nتم تحميل: {d['filename']}")
-
+    # إعداد خيارات yt-dlp
     ydl_opts = {
         "format": "bestaudio/best",
         "addmetadata": True,
@@ -36,20 +33,15 @@ async def get_song(event):
         "geo_bypass": True,
         "nocheckcertificate": True,
         "postprocessors": [
-            {
-                "key": "FFmpegExtractAudio",
-                "preferredcodec": "mp3",
-                "preferredquality": "192",
-            },
+            {"key": "FFmpegVideoConvertor", "preferedformat": "mp3"},
+            {"key": "FFmpegMetadata"},
+            {"key": "FFmpegExtractAudio"},
         ],
         "outtmpl": "%(title)s.%(ext)s",
-        "progress_hooks": [hook],
         "logtostderr": False,
         "quiet": True,
         "no_warnings": True,
         "cookiefile": get_cookies_file(),
-        "ratelimit": 1000,  # تحديد معدل التحميل (يمكنك ضبط القيمة حسب السرعة عندك)
-        "socket_timeout": 60,  # مهلة الاتصال
     }
 
     with YoutubeDL(ydl_opts) as ydl:
@@ -58,13 +50,17 @@ async def get_song(event):
             title = info['entries'][0]['title']
             filename = f"{title}.mp3"
 
+            # تعديل الرسالة مرة أخرى
             await event.edit(f"⎉╎ تم العثـور علـى المطلـوب، جـاري إرسال الملـف ♥️..")
 
+            # إرسال الملف مع وصف
             caption = "⎉╎ تم التنزيـل : @Tepthon"
             await zedub.send_file(event.chat_id, filename, caption=caption)
 
+            # حذف الملف بعد الإرسال
             os.remove(filename)
 
+            # تعديل الرسالة النهائية
             await event.edit("⎉╎ تم إرسال الملف بنجاح! 🎶")
         except Exception as e:
             await event.edit(f"⎉╎ حدث خطـأ: {e}")
