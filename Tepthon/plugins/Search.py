@@ -1,20 +1,28 @@
 import os
+import glob
+import random
 import yt_dlp
-from telethon import events
+from Tepthon import zedub  
 
-@client.on(events.NewMessage(pattern=r'\.بحث(?:\s|$)(.*)'))
+def get_cookies_file():
+    folder_path = f"{os.getcwd()}/rcookies"
+    txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
+    if not txt_files:
+        raise FileNotFoundError("No .txt files found in the specified folder.")
+    cookie_txt_file = random.choice(txt_files)
+    return cookie_txt_file
+
+@zedub.on(events.NewMessage(pattern=r'\.بحث(?:\s|$)(.*)'))
 async def search_song(event):
     query = event.pattern_match.group(1).strip()
     if not query:
         return await event.reply("**يجب عليك إدخال اسم المقطع الصوتي.**")
 
-    # قراءة الكوكيز من الملف
-    cookies_file_path = 'rcookies/cozc.txt'
-    if os.path.exists(cookies_file_path):
-        with open(cookies_file_path, 'r') as file:
-            cookies = file.read().strip()
-    else:
-        return await event.reply("**عذراً، لم أتمكن من العثور على ملف الكوكيز.**")
+    # قراءة ملف الكوكيز عشوائياً
+    try:
+        cookies_file_path = get_cookies_file()
+    except FileNotFoundError as e:
+        return await event.reply(f"**خطأ: {e}**")
 
     # إعداد خيارات yt-dlp
     ydl_opts = {
