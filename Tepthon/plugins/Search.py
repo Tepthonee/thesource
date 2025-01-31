@@ -40,14 +40,19 @@ async def search_song(event):
         'cookiefile': cookies_file_path,
         'outtmpl': os.path.join(downloads_folder, '%(title)s.%(ext)s'),  # استخدام المسار الصحيح
         'default_search': 'ytsearch',
-        'noplaylist': True,  # تحميل مقطع واحد
     }
 
-    # البحث وتحميل الصوت
-    await event.reply("**جارِ البحث، يرجى الانتظار...**")
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        try:
-            info = ydl.extract_info(query, download=True)
+    # تحديد ما إذا كان يجب إزالة `noplaylist`
+    try:
+        await event.reply("**جارِ البحث، يرجى الانتظار...**")
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(query, download=True)  # تحميل الأغنية
+
+            # إذا كانت قائمة تشغيل، سنحصل على العناصر الأولى
+            if 'entries' in info:
+                # إذا كانت قائمة تشغيل، قم بالتعامل مع أول عنصر
+                info = info['entries'][0]
+
             filename = ydl.prepare_filename(info)
 
             # التحقق من وجود الملف
@@ -57,8 +62,8 @@ async def search_song(event):
             # إرسال الملف
             await zedub.send_file(event.chat_id, filename, caption=f"تحميل: {info['title']}")
             
-        except Exception as e:
-            await event.reply(f"**حدث خطأ أثناء محاولة تحميل الصوت:** {e}")
+    except Exception as e:
+        await event.reply(f"**حدث خطأ أثناء محاولة تحميل الصوت:** {e}")
 
     # حذف الملف بعد الإرسال
     if os.path.exists(filename):
