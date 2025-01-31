@@ -29,7 +29,7 @@ async def get_song(event):
             {"key": "FFmpegExtractAudio", "preferredcodec": "mp3", "preferredquality": "192"},
             {"key": "FFmpegMetadata"},
         ],
-        "outtmpl": "%(title)s.%(ext)s",
+        "outtmpl": os.path.join(download_path, "%(title)s.%(ext)s"),
         "cookiefile": get_cookies_file(),
         "quiet": True,
     }
@@ -47,7 +47,7 @@ async def get_song(event):
             title = video.get('title', 'اغنية غير معروفة')
             filename = os.path.join(download_path, f"{title}.mp3")
 
-            # التحقق من وجود الملف
+            # التحقق من وجود الملف بعد تحميله
             if not os.path.exists(filename):
                 await event.edit("⎉╎ خطأ: لم يتم العثور على الملف بعد التحميل ❌")
                 return
