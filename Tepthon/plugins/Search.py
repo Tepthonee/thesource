@@ -1,70 +1,76 @@
-import os
-import glob
 import random
+import glob
+import asyncio
 import yt_dlp
-from telethon import events
+import os
+from telethon import TelegramClient, events
+from yt_dlp import YoutubeDL
 from Tepthon import zedub
+from ..Config import Config
 
 def get_cookies_file():
     folder_path = f"{os.getcwd()}/rcookies"
     txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
     if not txt_files:
-        raise FileNotFoundError("لا توجد ملفات .txt في المجلد المحدد.")
+        raise FileNotFoundError("No .txt files found in the specified folder.")
     cookie_txt_file = random.choice(txt_files)
     return cookie_txt_file
 
-@zedub.on(events.NewMessage(pattern=r'\.بحث(?:\s|$)(.*)'))
-async def search_song(event):
-    query = event.pattern_match.group(1).strip()
-    if not query:
-        return await event.reply("**يجب عليك إدخال اسم المقطع الصوتي.**")
+@zedub.on(events.NewMessage(pattern='.بحث (.*)'))
+async def get_song(event):
+    song_name = event.pattern_match.group(1)
+    
+    # تعديل الرسالة الأصلية
+    await event.edit("⎉╎ جــاري البحــث عن المطلـوب 🎧..")
 
-    # قراءة ملف الكوكيز عشوائياً
-    try:
-        cookies_file_path = get_cookies_file()
-    except FileNotFoundError as e:
-        return await event.reply(f"**خطأ: {e}**")
-
-    # إنشاء مجلد التنزيلات إذا لم يكن موجوداً
-    downloads_folder = './downloads'
-    os.makedirs(downloads_folder, exist_ok=True)
-
-    # إعداد خيارات yt-dlp مع البحث في يوتيوب
+    # إعداد خيارات yt-dlp
     ydl_opts = {
-        'format': 'bestaudio/best',
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192',
-        }],
-        'cookiefile': cookies_file_path,
-        'outtmpl': os.path.join(downloads_folder, '%(title)s.%(ext)s'),  # استخدام المسار الصحيح
-        'default_search': 'ytsearch',
+        "format": "bestaudio/best",
+        "addmetadata": True,
+        "key": "FFmpegMetadata",
+        "writethumbnail": False,
+        "prefer_ffmpeg": True,
+        "geo_bypass": True,
+        "nocheckcertificate": True,
+        "postprocessors": [
+            {
+                "key": "FFmpegExtractAudio",
+                "preferredcodec": "mp3",
+                "preferredquality": "192",
+            },
+        ],
+        "outtmpl": "%(title)s.%(ext)s",
+        "progress_hooks": [hook],
+        "logtostderr": False,
+        "quiet": True,
+        "no_warnings": True,
+        "cookiefile": get_cookies_file(),
+        "ratelimit": 1000,  # تحديد معدل التحميل (يمكنك ضبط القيمة حسب السرعة عندك)
+        "socket_timeout": 60,  # مهلة الاتصال
+        "source_address": None,  # يمكن استخدام هذا لتحديد عنوان IP إن لزم الأمر
     }
 
-    # تحديد ما إذا كان يجب إزالة `noplaylist`
-    try:
-        await event.reply("**جارِ البحث، يرجى الانتظار...**")
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(query, download=True)  # تحميل الأغنية
+    def hook(d):
+        if d['status'] == 'finished':
+            print(f"\nتم تحميل: {d['filename']}")
 
-            # إذا كانت قائمة تشغيل، سنحصل على العناصر الأولى
-            if 'entries' in info:
-                # إذا كانت قائمة تشغيل، قم بالتعامل مع أول عنصر
-                info = info['entries'][0]
+    with YoutubeDL(ydl_opts) as ydl:
+        try:
+            info = ydl.extract_info(f"ytsearch:{song_name}", download=True)
+            title = info['entries'][0]['title']
+            filename = f"{title}.mp3"
 
-            filename = ydl.prepare_filename(info)
+            # تعديل الرسالة مرة أخرى
+            await event.edit(f"⎉╎ تم العثـور علـى المطلـوب، جـاري إرسال الملـف ♥️..")
 
-            # التحقق من وجود الملف
-            if not os.path.exists(filename):
-                return await event.reply("**حدث خطأ: لم يتم العثور على الملف المحمل.**")
-            
-            # إرسال الملف
-            await zedub.send_file(event.chat_id, filename, caption=f"تحميل: {info['title']}")
-            
-    except Exception as e:
-        await event.reply(f"**حدث خطأ أثناء محاولة تحميل الصوت:** {e}")
+            # إرسال الملف مع وصف
+            caption = "⎉╎ تم التنزيـل : @Tepthon"
+            await zedub.send_file(event.chat_id, filename, caption=caption)
 
-    # حذف الملف بعد الإرسال
-    if os.path.exists(filename):
-        os.remove(filename)
+            # حذف الملف بعد الإرسال
+            os.remove(filename)
+
+            # تعديل الرسالة النهائية
+            await event.edit("⎉╎ تم إرسال الملف بنجاح! 🎶")
+        except Exception as e:
+            await event.edit(f"⎉╎ حدث خطـأ: {e}")
