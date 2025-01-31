@@ -2,6 +2,7 @@ import os
 import glob
 import random
 import yt_dlp
+from telethon import events
 from Tepthon import zedub  
 
 def get_cookies_file():
