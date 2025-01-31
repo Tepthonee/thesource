@@ -36,43 +36,59 @@ def get_cookies_file():
         raise FileNotFoundError("No .txt files found in the specified folder.")
     return random.choice(txt_files)
 
+import os
+
 @zedub.zed_cmd(pattern="بحث(320)?(?:\s|$)([\s\S]*)")
 async def song(event):
     reply_to_id = await reply_id(event)
     reply = await event.get_reply_message()
+
     if event.pattern_match.group(2):
-        query = event.pattern_match.group(2)
+        query = event.pattern_match.group(2).strip()
     elif reply and reply.message:
-        query = reply.message
+        query = reply.message.strip()
     else:
         return await edit_or_reply(
             event,
-            "**يجب عليك اضافة اسم المقطع الصوتي التي تريد تنزيله للامـر ، `.بحث` + العنوان**",
+            "**يجب عليك اضافة اسم المقطع الصوتي التي تريد تنزيله للامـر ، .بحث + العنوان**",
         )
-    razan = base64.b64decode("VHdIUHd6RlpkYkNJR1duTg==")
-    razanevent = await edit_or_reply(event, "**⌔∮ جـارِ البحث يرجى الانتظار .  .  .**")
-    video_link = await yt_search(str(query))
+
+    # قراءة الكوكيز من الملف
+    cookies_file_path = 'rcookies/cozc.txt'
+    if os.path.exists(cookies_file_path):
+        with open(cookies_file_path, 'r') as file:
+            cookies = file.read().strip()
+    else:
+        return await edit_or_reply(event, "**عذراً، لم أتمكن من العثور على ملف الكوكيز.**")
+
+    razanevent = await edit_or_reply(event, "جارِ البحث، يرجى الانتظار...")
+
+    video_link = await yt_search(str(query), cookies=cookies)
     if not url(video_link):
-        return await razanevent.edit(f"**عـذراً لـم استطـع ايجـاد** {query}")
+        return await razanevent.edit(f"عذراً، لم أستطع إيجاد {query}")
+
     cmd = event.pattern_match.group(1)
     q = "320k" if cmd == "320" else "128k"
+
     song_file, razanthumb, title = await song_download(
-        video_link, razanevent, quality=q
+        video_link, razanevent, quality=q, cookies=cookies
     )
+
     await event.client.send_file(
         event.chat_id,
         song_file,
         force_document=False,
-        caption=f"**العنوان:** `{title}`",
+        caption=f"العنوان: {title}",
         thumb=razanthumb,
         supports_streaming=True,
         reply_to=reply_to_id,
     )
+    
     await razanevent.delete()
+
     for files in (razanthumb, song_file):
         if files and os.path.exists(files):
             os.remove(files)
-
 
 @zedub.zed_cmd(pattern="فيديو(?:\s|$)([\s\S]*)")
 async def vsong(event):
