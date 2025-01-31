@@ -20,10 +20,13 @@ def get_cookies_file():
 async def get_song(event):
     song_name = event.pattern_match.group(1)
     
-    # تعديل الرسالة الأصلية
     await event.edit("⎉╎ جــاري البحــث عن المطلـوب 🎧..")
 
-    # إعداد خيارات yt-dlp
+    # تعريف دالة hook هنا
+    def hook(d):
+        if d['status'] == 'finished':
+            print(f"\nتم تحميل: {d['filename']}")
+
     ydl_opts = {
         "format": "bestaudio/best",
         "addmetadata": True,
@@ -47,12 +50,7 @@ async def get_song(event):
         "cookiefile": get_cookies_file(),
         "ratelimit": 1000,  # تحديد معدل التحميل (يمكنك ضبط القيمة حسب السرعة عندك)
         "socket_timeout": 60,  # مهلة الاتصال
-        "source_address": None,  # يمكن استخدام هذا لتحديد عنوان IP إن لزم الأمر
     }
-
-    def hook(d):
-        if d['status'] == 'finished':
-            print(f"\nتم تحميل: {d['filename']}")
 
     with YoutubeDL(ydl_opts) as ydl:
         try:
@@ -60,17 +58,13 @@ async def get_song(event):
             title = info['entries'][0]['title']
             filename = f"{title}.mp3"
 
-            # تعديل الرسالة مرة أخرى
             await event.edit(f"⎉╎ تم العثـور علـى المطلـوب، جـاري إرسال الملـف ♥️..")
 
-            # إرسال الملف مع وصف
             caption = "⎉╎ تم التنزيـل : @Tepthon"
             await zedub.send_file(event.chat_id, filename, caption=caption)
 
-            # حذف الملف بعد الإرسال
             os.remove(filename)
 
-            # تعديل الرسالة النهائية
             await event.edit("⎉╎ تم إرسال الملف بنجاح! 🎶")
         except Exception as e:
             await event.edit(f"⎉╎ حدث خطـأ: {e}")
