@@ -14,7 +14,7 @@ def get_cookies_file():
 @zedub.on(events.NewMessage(pattern='.بحث (.*)'))
 async def get_song(event):
     song_name = event.pattern_match.group(1)
-    await event.edit("⎉╎ جــاري البحــث عن المطلـوب 🎧..")
+    await event.edit("**⎉╎ جــاري البحــث عن المطلـوب 🎧..**")
 
     # إنشاء مجلد التحميل
     download_path = os.path.join(os.getcwd(), "downloads")
@@ -39,28 +39,28 @@ async def get_song(event):
             info = ydl.extract_info(f"ytsearch:{song_name}", download=True)
             entries = info.get('entries', [])
             if not entries:
-                await event.edit("⎉╎ لم يتم العثور على نتائج ❌")
+                await event.edit("**⎉╎ لم يتم العثــور على نتائج 🥹**")
                 return
             
             # الحصول على بيانات الفيديو
             video = entries[0]
-            title = video.get('title', 'اغنية غير معروفة')
+            title = video.get('title', 'عنوان غير معروف')
             filename = os.path.join(download_path, f"{title}.mp3")
 
             # التحقق من وجود الملف بعد تحميله
             if not os.path.exists(filename):
-                await event.edit("⎉╎ خطأ: لم يتم العثور على الملف بعد التحميل ❌")
+                await event.edit("**⎉╎ خطــأ: لم يتم العثور على الملف بعد التحميل**")
                 return
 
-            await event.edit(f"⎉╎ تم العثور على المطلوب، جاري الإرسال 🎶")
+            await event.edit(f"**⎉╎ تم العثور على المطلـوب، جاري الإرسـال..**")
 
             # إرسال الملف
-            caption = f"⎉╎ تم التنزيل: {title} 🎵\n📥 بواسطة: @Tepthon"
+            caption = f"**⎉╎ تم التنزيل: {title} ♥️\n⎉╎ بواسطـة: @Tepthon**"
             await zedub.send_file(event.chat_id, filename, caption=caption)
 
             # حذف الملف بعد الإرسال
             os.remove(filename)
 
-            await event.edit("⎉╎ تم الإرسال بنجاح! ✅")
+            await event.edit("**⎉╎ تم الإرسال بنجاح! ✅**")
         except Exception as e:
-            await event.edit(f"⎉╎ حدث خطأ: {str(e)}")
+            await event.edit(f"**⎉╎ حدث خطأ: {str(e)}**")
