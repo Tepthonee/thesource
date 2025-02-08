@@ -10,16 +10,17 @@ def get_cookies_file():
     txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
     return random.choice(txt_files) if txt_files else None
 
+# إعدادات ytdlp
 ytd = {
     "prefer_ffmpeg": True,
     "addmetadata": True,
     "geo-bypass": True,
     "nocheckcertificate": True,
-    "cookiefile": get_cookies_file(),  # إضافة الكوكيز هنا
+    "cookiefile": get_cookies_file(),  # إضافة ملف الكوكيز
     "postprocessors": [{"key": "FFmpegMetadata"}],
 }
 
-# دالة لبحث عن الفيديوهات
+# دالة للبحث عن رابط الفيديو
 def get_yt_link(query, ytd):
     with YoutubeDL(ytd) as ydl:
         info = ydl.extract_info(f"ytsearch:{query}", download=False)
@@ -27,7 +28,13 @@ def get_yt_link(query, ytd):
             return info['entries'][0]['url']
     return None
 
-# دالة للتحميل الصوتي
+# دالة لتحميل المحتوى الصوتي
+async def download_yt(event, url, options):
+    with YoutubeDL(options) as ydl:
+        ydl.download([url])
+    await event.edit("⌔∮ تم التحميل بنجاح!")
+
+# دالة لتحميل الصوتي
 @zedub.zed_cmd(pattern="تحميل صوتي (.*)")
 async def down_voic(event):
     zed = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
@@ -41,13 +48,16 @@ async def down_voic(event):
             "preferredquality": "128",
         },
     )
+    
     url = event.pattern_match.group(1)
     if not url:
         return await zed.edit("⌔∮ يجب عليك وضع رابط للتحميل الصوتي")
+    
     try:
         await is_url_work(url)
     except BaseException:
         return await zed.edit("⌔∮ يرجى وضع الرابط بشكل صحيح")
+    
     await download_yt(zed, url, ytd)
 
 # دالة لتحميل الفيديو
@@ -59,30 +69,24 @@ async def vidown(event):
     ytd["postprocessors"].insert(
         0, {"key": "FFmpegVideoConvertor", "preferedformat": "mp4"}
     )
+    
     url = event.pattern_match.group(1)
     if not url:
         return await zed.edit("⌔∮ يجب عليك وضع رابط لتحميل الفيديو")
+    
     try:
         await is_url_work(url)
     except BaseException:
         return await zed.edit("⌔∮ يرجى وضع الرابط بشكل صحيح")
+    
     await download_yt(zed, url, ytd)
 
 # دالة للبحث
-@zedub.zed_cmd(pattern="بحث( (.*)|$)")
+@zedub.zed_cmd(pattern="بحث (.*)")
 async def sotea(event):
-    zed = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
-    ytd["format"] = "bestaudio"
-    ytd["outtmpl"] = "%(id)s.m4a"
-    ytd["postprocessors"].insert(
-        0,
-        {
-            "key": "FFmpegExtractAudio",
-            "preferredcodec": "m4a",
-            "preferredquality": "128",
-        },
-    )
-    query = event.pattern_match.group(2) if event.pattern_match.group(1) else None
+    zed = await event.edit("⌔∮ جار البحث الآن...")
+    
+    query = event.pattern_match.group(1) if event.pattern_match.group(1) else None
     if not query:
         return await zed.edit("⌔∮ يجب عليك تحديد ما تريد تحميله، اكتب عنوانًا مع الأمر")
     
@@ -90,8 +94,6 @@ async def sotea(event):
     url = get_yt_link(query, ytd)
     if not url:
         return await zed.edit("⌔∮ لم يتم العثور على الفيديو، اكتب عنوانًا مفصلًا بشكل صحيح")
+
     await zed.edit("⌔∮ جار تحميل الملف الصوتي، انتظر قليلًا")
     await download_yt(zed, url, ytd)
-
-# دالة لتحميل المحتوى
-async def download_yt(event, url, options
