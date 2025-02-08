@@ -1,7 +1,8 @@
-from Tepthon import download_yt, get_yt_link, is_url_work, zedub
 import os
-import random
 import glob
+import random
+from yt_dlp import YoutubeDL
+from Tepthon import zedub
 
 # دالة للحصول على ملف الكوكيز
 def get_cookies_file():
@@ -18,9 +19,10 @@ ytd = {
     "postprocessors": [{"key": "FFmpegMetadata"}],
 }
 
+# دالة لتحميل الصوتي
 @zedub.zed_cmd(pattern="تحميل صوتي (.*)")
 async def down_voic(event):
-    jmbot = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
+    zed = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
     ytd["format"] = "bestaudio"
     ytd["outtmpl"] = "%(id)s.m4a"
     ytd["postprocessors"].insert(
@@ -33,16 +35,17 @@ async def down_voic(event):
     )
     url = event.pattern_match.group(1)
     if not url:
-        return await jmbot.edit("⌔∮ يجب عليك وضع رابط للتحميل الصوتي")
+        return await zed.edit("⌔∮ يجب عليك وضع رابط للتحميل الصوتي")
     try:
         await is_url_work(url)
     except BaseException:
-        return await jmbot.edit("⌔∮ يرجى وضع الرابط بشكل صحيح")
-    await download_yt(jmbot, url, ytd)
+        return await zed.edit("⌔∮ يرجى وضع الرابط بشكل صحيح")
+    await download_yt(zed, url, ytd)
 
+# دالة لتحميل الفيديو
 @zedub.zed_cmd(pattern="تحميل فيديو (.*)")
 async def vidown(event):
-    jmbot = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
+    zed = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
     ytd["format"] = "best"
     ytd["outtmpl"] = "%(id)s.mp4"
     ytd["postprocessors"].insert(
@@ -50,16 +53,17 @@ async def vidown(event):
     )
     url = event.pattern_match.group(1)
     if not url:
-        return await jmbot.edit("⌔∮ يجب عليك وضع رابط لتحميل الفيديو")
+        return await zed.edit("⌔∮ يجب عليك وضع رابط لتحميل الفيديو")
     try:
         await is_url_work(url)
     except BaseException:
-        return await jmbot.edit("⌔∮ يرجى وضع الرابط بشكل صحيح")
-    await download_yt(jmbot, url, ytd)
+        return await zed.edit("⌔∮ يرجى وضع الرابط بشكل صحيح")
+    await download_yt(zed, url, ytd)
 
+# دالة للبحث
 @zedub.zed_cmd(pattern="بحث( (.*)|$)")
 async def sotea(event):
-    jmbot = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
+    zed = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
     ytd["format"] = "bestaudio"
     ytd["outtmpl"] = "%(id)s.m4a"
     ytd["postprocessors"].insert(
@@ -72,9 +76,11 @@ async def sotea(event):
     )
     query = event.pattern_match.group(2) if event.pattern_match.group(1) else None
     if not query:
-        return await jmbot.edit("⌔∮ يجب عليك تحديد ما تريد تحميله، اكتب عنوانًا مع الأمر")
+        return await zed.edit("⌔∮ يجب عليك تحديد ما تريد تحميله، اكتب عنوانًا مع الأمر")
+    
+    # استخدم yt-dlp للبحث عن الفيديو
     url = get_yt_link(query, ytd)
     if not url:
-        return await jmbot.edit("⌔∮ لم يتم العثور على الفيديو، اكتب عنوانًا مفصلًا بشكل صحيح")
-    await jmbot.edit("⌔∮ جار تحميل الملف الصوتي، انتظر قليلًا")
-    await download_yt(jmbot, url, ytd)
+        return await zed.edit("⌔∮ لم يتم العثور على الفيديو، اكتب عنوانًا مفصلًا بشكل صحيح")
+    await zed.edit("⌔∮ جار تحميل الملف الصوتي، انتظر قليلًا")
+    await download_yt(zed, url, ytd)
