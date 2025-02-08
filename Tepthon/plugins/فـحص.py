@@ -17,7 +17,7 @@ from telethon.errors.rpcerrorlist import (
     WebpageMediaEmptyError,
 )
 
-from . import StartTime, zedub, zedversion
+from . import StartTime, zedub, tepversion
 from ..Config import Config
 from ..helpers.functions import zedalive, check_data_base_heal_th, get_readable_time
 from ..helpers.utils import reply_id
