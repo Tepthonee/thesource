@@ -1,8 +1,8 @@
 import os
 import glob
 import random
-from yt_dlp import YoutubeDL
 from Tepthon import zedub
+from yt_dlp import YoutubeDL
 
 # دالة للحصول على ملف الكوكيز
 def get_cookies_file():
@@ -19,8 +19,16 @@ ytd = {
     "postprocessors": [{"key": "FFmpegMetadata"}],
 }
 
+# دالة لبحث عن الفيديوهات
+def get_yt_link(query, ytd):
+    with YoutubeDL(ytd) as ydl:
+        info = ydl.extract_info(f"ytsearch:{query}", download=False)
+        if info and 'entries' in info and len(info['entries']) > 0:
+            return info['entries'][0]['url']
+    return None
+
 # دالة لتحميل الصوتي
-@zedub.zed_cmd(pattern="تحميل صوتي (.*)")
+@zed.zed_cmd(pattern="تحميل صوتي (.*)")
 async def down_voic(event):
     zed = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
     ytd["format"] = "bestaudio"
@@ -43,7 +51,7 @@ async def down_voic(event):
     await download_yt(zed, url, ytd)
 
 # دالة لتحميل الفيديو
-@zedub.zed_cmd(pattern="تحميل فيديو (.*)")
+@zed.zed_cmd(pattern="تحميل فيديو (.*)")
 async def vidown(event):
     zed = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
     ytd["format"] = "best"
@@ -61,7 +69,7 @@ async def vidown(event):
     await download_yt(zed, url, ytd)
 
 # دالة للبحث
-@zedub.zed_cmd(pattern="بحث( (.*)|$)")
+@zed.zed_cmd(pattern="بحث( (.*)|$)")
 async def sotea(event):
     zed = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
     ytd["format"] = "bestaudio"
@@ -84,3 +92,12 @@ async def sotea(event):
         return await zed.edit("⌔∮ لم يتم العثور على الفيديو، اكتب عنوانًا مفصلًا بشكل صحيح")
     await zed.edit("⌔∮ جار تحميل الملف الصوتي، انتظر قليلًا")
     await download_yt(zed, url, ytd)
+
+# دالة لتحميل المحتوى
+async def download_yt(event, url, options):
+    with YoutubeDL(options) as ydl:
+        try:
+            ydl.download([url])
+            await event.edit("⌔∮ تم التحميل بنجاح!")
+        except BaseException:
+            await event.edit("⌔∮ حدث خطأ أثناء التحميل
