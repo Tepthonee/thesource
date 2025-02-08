@@ -28,7 +28,7 @@ from ..core.managers import edit_delete, edit_or_reply
 from ..core.logger import logging
 from . import BOTLOG, BOTLOG_CHATID, mention
 
-vocself = False  # هنا نقوم بتعريف المتغير
+vocself = True  # هنا نقوم بتعريف المتغير
 
 @zedub.zed_cmd(pattern="(تفعيل البصمه الذاتيه|تفعيل البصمه الذاتية|تفعيل البصمة الذاتيه|تفعيل البصمة الذاتية)")
 async def start_datea(event):
