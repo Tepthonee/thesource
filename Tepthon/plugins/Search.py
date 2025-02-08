@@ -25,7 +25,9 @@ def get_yt_link(query):
     with YoutubeDL(ytd) as ydl:
         info = ydl.extract_info(f"ytsearch:{query}", download=False)
         if info and 'entries' in info and len(info['entries']) > 0:
-            return info['entries'][0]['url']
+            # التأكد من وجود 'url' في المعلومات المسترجعة
+            if 'url' in info['entries'][0]:
+                return info['entries'][0]['url']
     return None
 
 # دالة لتحميل المحتوى الصوتي
@@ -34,7 +36,7 @@ async def download_yt(event, url, options):
         ydl.download([url])
     await event.edit("⌔∮ تم التحميل بنجاح!")
 
-# دالة لتحميل الصوتي
+# دالة لتحميل الفيديو الصوتي
 @zedub.zed_cmd(pattern="تحميل صوتي (.*)")
 async def down_voic(event):
     zed = await event.edit("⌔∮ جار التحميل، يرجى الانتظار قليلاً...")
@@ -69,7 +71,7 @@ async def vidown(event):
     ytd["outtmpl"] = "%(id)s.%(ext)s"  # استخدام معرّف الفيديو
 
     ytd["postprocessors"].insert(
-        0, {"key": "FFmpegVideoConvertor", "preferedformat": "mp4"}
+        0, {"key": "FFmpegVideoConvertor", "preferredformat": "mp4"}
     )
 
     url = event.pattern_match.group(1)
