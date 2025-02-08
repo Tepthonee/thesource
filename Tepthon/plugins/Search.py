@@ -1,53 +1,80 @@
+from Tepthon import download_yt, get_yt_link, is_url_work, zedub
 import os
 import random
 import glob
-import yt_dlp
-from telethon import events
-from Tepthon import zedub
 
+# دالة للحصول على ملف الكوكيز
 def get_cookies_file():
     folder_path = f"{os.getcwd()}/rcookies"
     txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
     return random.choice(txt_files) if txt_files else None
 
-@zedub.on(events.NewMessage(pattern='.بحث (.*)'))
-async def get_song(event):
-    song_name = event.pattern_match.group(1)
-    await event.edit("**⎉╎ جــاري البحــث عن المطلـوب 🎧..**")
+ytd = {
+    "prefer_ffmpeg": True,
+    "addmetadata": True,
+    "geo-bypass": True,
+    "nocheckcertificate": True,
+    "cookiefile": get_cookies_file(),  # إضافة الكوكيز هنا
+    "postprocessors": [{"key": "FFmpegMetadata"}],
+}
 
-    download_path = os.path.join(os.getcwd(), "downloads")
-    os.makedirs(download_path, exist_ok=True)
+@zedub.zed_cmd(pattern="تحميل صوتي (.*)")
+async def down_voic(event):
+    jmbot = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
+    ytd["format"] = "bestaudio"
+    ytd["outtmpl"] = "%(id)s.m4a"
+    ytd["postprocessors"].insert(
+        0,
+        {
+            "key": "FFmpegExtractAudio",
+            "preferredcodec": "m4a",
+            "preferredquality": "128",
+        },
+    )
+    url = event.pattern_match.group(1)
+    if not url:
+        return await jmbot.edit("⌔∮ يجب عليك وضع رابط للتحميل الصوتي")
+    try:
+        await is_url_work(url)
+    except BaseException:
+        return await jmbot.edit("⌔∮ يرجى وضع الرابط بشكل صحيح")
+    await download_yt(jmbot, url, ytd)
 
-    ydl_opts = {
-        "format": "bestaudio/best",
-        "paths": {"home": download_path},
-        "outtmpl": os.path.join(download_path, "%(title)s.%(ext)s"),
-        "cookiefile": get_cookies_file(),
-        "quiet": True,
-    }
+@zedub.zed_cmd(pattern="تحميل فيديو (.*)")
+async def vidown(event):
+    jmbot = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
+    ytd["format"] = "best"
+    ytd["outtmpl"] = "%(id)s.mp4"
+    ytd["postprocessors"].insert(
+        0, {"key": "FFmpegVideoConvertor", "preferedformat": "mp4"}
+    )
+    url = event.pattern_match.group(1)
+    if not url:
+        return await jmbot.edit("⌔∮ يجب عليك وضع رابط لتحميل الفيديو")
+    try:
+        await is_url_work(url)
+    except BaseException:
+        return await jmbot.edit("⌔∮ يرجى وضع الرابط بشكل صحيح")
+    await download_yt(jmbot, url, ytd)
 
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        try:
-            info = ydl.extract_info(f"ytsearch:{song_name}", download=True)
-            entries = info.get('entries', [])
-            if not entries:
-                await event.edit("**⎉╎ لم يتم العثــور على نتائج 🥹**")
-                return
-            
-            video = entries[0]
-            title = video.get('title', 'عنوان غير معروف')
-            expected_filename = os.path.join(download_path, f"{title}.m4a")  # تأكد من امتداد الملف
-
-            if os.path.exists(expected_filename):
-                filename = expected_filename
-
-                await event.edit(f"**⎉╎ تم العثور على المطلـوب، جاري الإرسـال..**")
-                caption = f"**⎉╎ تم التنزيل: {title} ♥️\n⎉╎ بواسطـة: @Tepthon**"
-                await zedub.send_file(event.chat_id, filename, caption=caption)
-
-                os.remove(filename)
-                await event.edit("**⎉╎ تم الإرسال بنجاح! ✅**")
-            else:
-                await event.edit("**⎉╎ خطــأ: لم يتم العثور على الملف بعد التحميل**")
-        except Exception as e:
-            await event.edit(f"**⎉╎ حدث خطأ: {str(e)}**")
+@zedub.zed_cmd(pattern="بحث( (.*)|$)")
+async def sotea(event):
+    jmbot = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
+    ytd["format"] = "bestaudio"
+    ytd["outtmpl"] = "%(id)s.m4a"
+    ytd["postprocessors"].insert(
+        0,
+        {
+            "key": "FFmpegExtractAudio",
+            "preferredcodec": "m4a",
+            "preferredquality": "128",
+        },
+    )
+    query = event.pattern_match.group(2) if event.pattern_match.group(1) else None
+    if not query:
+        return await jmbot.edit("⌔∮ يجب عليك تحديد ما تريد تحميله، اكتب عنوانًا مع الأمر")
+    url = get_yt_link(query, ytd)
+    if not url:
+        return await jmbot.edit("⌔∮ لم يتم العثور على الفيديو، اكتب عنوانًا مفصلًا بشكل صحيح")
+    await jmbot.edit("⌔∮ جار تحميل الملف الصوتي، انتظر قليلًا")
+    await download_yt(jmbot, url, ytd)
