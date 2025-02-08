@@ -27,12 +27,12 @@ def get_yt_link(query, ytd):
             return info['entries'][0]['url']
     return None
 
-# دالة لتحميل الصوتي
+# دالة للتحميل الصوتي
 @zedub.zed_cmd(pattern="تحميل صوتي (.*)")
 async def down_voic(event):
     zed = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
     ytd["format"] = "bestaudio"
-    ytd["outtmpl"] = "%(id)s.m4a"
+    ytd["outtmpl"] = "%(id)s.m4a"  # يمكن استخدام معرّف الفيديو
     ytd["postprocessors"].insert(
         0,
         {
@@ -55,7 +55,7 @@ async def down_voic(event):
 async def vidown(event):
     zed = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
     ytd["format"] = "best"
-    ytd["outtmpl"] = "%(id)s.mp4"
+    ytd["outtmpl"] = "%(id)s.mp4"  # يمكن استخدام معرّف الفيديو
     ytd["postprocessors"].insert(
         0, {"key": "FFmpegVideoConvertor", "preferedformat": "mp4"}
     )
@@ -94,10 +94,4 @@ async def sotea(event):
     await download_yt(zed, url, ytd)
 
 # دالة لتحميل المحتوى
-async def download_yt(event, url, options):
-    with YoutubeDL(options) as ydl:
-        try:
-            ydl.download([url])
-            await event.edit("⌔∮ تم التحميل بنجاح!")
-        except BaseException:
-            await event.edit("⌔∮ حدث خطأ أثناء التحميل")
+async def download_yt(event, url, options
