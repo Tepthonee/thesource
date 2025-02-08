@@ -28,7 +28,7 @@ def get_yt_link(query, ytd):
     return None
 
 # دالة لتحميل الصوتي
-@zed.zed_cmd(pattern="تحميل صوتي (.*)")
+@zedub.zed_cmd(pattern="تحميل صوتي (.*)")
 async def down_voic(event):
     zed = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
     ytd["format"] = "bestaudio"
@@ -51,7 +51,7 @@ async def down_voic(event):
     await download_yt(zed, url, ytd)
 
 # دالة لتحميل الفيديو
-@zed.zed_cmd(pattern="تحميل فيديو (.*)")
+@zedub.zed_cmd(pattern="تحميل فيديو (.*)")
 async def vidown(event):
     zed = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
     ytd["format"] = "best"
@@ -69,7 +69,7 @@ async def vidown(event):
     await download_yt(zed, url, ytd)
 
 # دالة للبحث
-@zed.zed_cmd(pattern="بحث( (.*)|$)")
+@zedub.zed_cmd(pattern="بحث( (.*)|$)")
 async def sotea(event):
     zed = await event.edit("⌔∮ جار التحميل يرجى الانتظار قليلًا")
     ytd["format"] = "bestaudio"
@@ -100,4 +100,4 @@ async def download_yt(event, url, options):
             ydl.download([url])
             await event.edit("⌔∮ تم التحميل بنجاح!")
         except BaseException:
-            await event.edit("⌔∮ حدث خطأ أثناء التحميل
+            await event.edit("⌔∮ حدث خطأ أثناء التحميل")
