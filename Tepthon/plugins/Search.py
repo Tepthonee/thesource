@@ -36,21 +36,18 @@ async def get_song(event):
             
             video = entries[0]
             title = video.get('title', 'عنوان غير معروف')
-            filename = glob.glob(os.path.join(download_path, f"{title}.*"))
+            expected_filename = os.path.join(download_path, f"{title}.m4a")  # تأكد من امتداد الملف
 
-            if not filename:
+            if os.path.exists(expected_filename):
+                filename = expected_filename
+
+                await event.edit(f"**⎉╎ تم العثور على المطلـوب، جاري الإرسـال..**")
+                caption = f"**⎉╎ تم التنزيل: {title} ♥️\n⎉╎ بواسطـة: @Tepthon**"
+                await zedub.send_file(event.chat_id, filename, caption=caption)
+
+                os.remove(filename)
+                await event.edit("**⎉╎ تم الإرسال بنجاح! ✅**")
+            else:
                 await event.edit("**⎉╎ خطــأ: لم يتم العثور على الملف بعد التحميل**")
-                return
-
-            filename = filename[0]
-
-            await event.edit(f"**⎉╎ تم العثور على المطلـوب، جاري الإرسـال..**")
-
-            caption = f"**⎉╎ تم التنزيل: {title} ♥️\n⎉╎ بواسطـة: @Tepthon**"
-            await zedub.send_file(event.chat_id, filename, caption=caption)
-
-            os.remove(filename)
-
-            await event.edit("**⎉╎ تم الإرسال بنجاح! ✅**")
         except Exception as e:
             await event.edit(f"**⎉╎ حدث خطأ: {str(e)}**")
