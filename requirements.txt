@@ -53,6 +53,7 @@ pymediainfo
 pyquery
 pyrogram
 pySmartDL
+pytube
 python-barcode
 python-dotenv
 pytz
