@@ -1,14 +1,13 @@
 import os
 import requests
 import yt_dlp
-from youtube_search import YoutubeSearch as B3KKK
 from telethon import TelegramClient, events
+from youtube_search import YoutubeSearch as B3KKK
 from Tepthon import zedub
 import glob
 import random
 
 def get_cookies_file():
-    # تأكد من تعديل مسار المجلد حسب احتياجك
     folder_path = f"{os.getcwd()}/rcookies"
     txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
     if not txt_files:
@@ -35,20 +34,25 @@ async def srchDl(e):
         await e.reply(f"بيتم التحميل يا باشا: {ttl}")
         
         opts = {
-            "format": "bestaudio[ext=m4a]",
-            "cookiefile": get_cookies_file(),  # إضافة ملف الكوكيز هنا
+            "format": "bestaudio/best",
+            "cookiefile": get_cookies_file(),
+            "noplaylist": True
         }
         
         with yt_dlp.YoutubeDL(opts) as ydl:
-            inf = ydl.extract_info(lnk, download=False)
+            info = ydl.extract_info(lnk, download=False)
         
-        if int(inf["duration"]) > 3605:
+        if int(info["duration"]) > 3605:
             await e.reply("طول الفيديو كبير اوي، مش هنقدر نحمله 🙄")
             return
+
+        # تحديث التنسيق المستخدم لتفادي الأخطاء
+        opts['format'] = 'bestaudio[ext=m4a]/bestaudio'
         
-        aud = ydl.prepare_filename(inf)
-        ydl.process_info(inf)
-        thb = inf["thumbnail"]
+        audio_file = ydl.prepare_filename(info)
+        ydl.download([lnk])
+        
+        thb = info["thumbnail"]
         thbFile = f"{id}.png"
         r = requests.get(thb)
         with open(thbFile, "wb") as f:
@@ -56,14 +60,14 @@ async def srchDl(e):
         
         await zedub.send_file(
             e.chat_id,
-            aud,
-            title=inf["title"],
-            performer=inf["channel"],
-            duration=int(inf["duration"]),
+            audio_file,
+            title=info["title"],
+            performer=info["channel"],
+            duration=int(info["duration"]),
             thumb=thbFile,
         )
-        
+
         os.remove(thbFile)
-        os.remove(aud)
+        os.remove(audio_file)
     except Exception as ex:
         await e.reply(f"حصل خطأ: {str(ex)}")
