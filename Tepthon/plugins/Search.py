@@ -2,10 +2,14 @@ import os
 import glob
 import random
 import asyncio
-from telethon import events
-from Tepthon import zedub
+from telethon import events, TelegramClient
 from pytube import YouTube
+from Tepthon import zedub
 from pytube.helpers import safe_filename
+from config import APP_ID, API_HASH  # استيراد APP_ID و API_HASH من ملف الإعدادات
+
+# إنشاء عميل تيليجرام بدون session_name
+client = TelegramClient('client', APP_ID, API_HASH)
 
 # دالة لجلب ملف الكوكيز عشوائيًا
 def get_cookies_file():
@@ -15,30 +19,31 @@ def get_cookies_file():
 
 # دالة لتحميل الصوت من يوتيوب
 async def download_youtube_audio(url, cookies_file):
-    # قراءة الكوكيز من الملف
     with open(cookies_file, 'r') as file:
         cookies = file.read()
     
-    # تعيين الكوكيز
     YouTube.cipher = lambda: cookies
-    yt = YouTube(url)
 
-    # استخراج الصوت فقط
+    try:
+        yt = YouTube(url)
+    except Exception as e:
+        raise ValueError("رابط الفيديو غير صحيح أو غير متوفر.") from e
+
     stream = yt.streams.filter(only_audio=True).first()
-    
-    # تحميل الصوت
+    if not stream:
+        raise ValueError("لا يوجد مصدر صوت متاح لهذا الفيديو.")
+
     file_path = stream.download(filename=safe_filename(yt.title) + '.mp4')
     return file_path
 
 # حدث للاستجابة لأمر البحث
-@zedub.on(events.NewMessage(pattern=r'\.بحث (.+)'))
+@client.on(events.NewMessage(pattern=r'\.بحث (.+)'))
 async def search_youtube(event):
-    url = event.pattern_match.group(1)
+    url = event.pattern_match.group(1).strip()
     
     await event.respond("جاري تحميل الصوت...")
     
     try:
-        # جلب ملف الكوكيز
         cookies_file = get_cookies_file()
         if not cookies_file:
             await event.respond("لم يتم العثور على ملفات الكوكيز.")
@@ -48,10 +53,11 @@ async def search_youtube(event):
         
         await event.respond("تم تنزيل الصوت بنجاح!", file=audio_file)
         
+    except ValueError as ve:
+        await event.respond(f"خطأ: {str(ve)}")
     except Exception as e:
         await event.respond(f"حدثت مشكلة أثناء التنزيل: {str(e)}")
 
-# ابدأ هنا البوت أو أي إعدادات أخرى
 if __name__ == "__main__":
-    # تأكد من إضافة كود بدء البوت هنا
-    pass
+    client.start()
+    client.run_until_disconnected()
