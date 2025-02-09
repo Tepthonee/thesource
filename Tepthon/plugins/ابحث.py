@@ -1,21 +1,21 @@
 import os
 import requests
 import yt_dlp
-from telethon import TelegramClient, events
-from youtube_search import YoutubeSearch as B3KKK
 from Tepthon import zedub
+from youtube_search import YoutubeSearch as B3KKK
+from telethon import TelegramClient, events
 import glob
 import random
 
 def get_cookies_file():
-    folder_path = f"{os.getcwd()}/rcookies"
+    folder_path = f"{os.getcwd()}/cookies"
     txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
     if not txt_files:
         raise FileNotFoundError("No .txt files found in the specified folder.")
     cookie_txt_file = random.choice(txt_files)
     return cookie_txt_file
 
-@zedub.on(events.NewMessage(pattern=".يوتيوب"))
+@zedub.on(events.NewMessage(pattern=".يوت"))
 async def srchDl(e):
     try:
         txt = e.raw_text.split()
@@ -23,7 +23,9 @@ async def srchDl(e):
             await e.reply("اكتب اسم الفيديو بعد الامر.")
             return
         q = txt[1]
-        res = B3KKK(q, max_results=1).to_dict()  # تأكد من أن zedub معرف بشكل صحيح
+        
+        # استخدام zedub للبحث عن الفيديو
+        res = B3KKK(q, max_results=1).to_dict()
         if not res:
             await e.reply("ما لقيتش حاجة 😢")
             return
@@ -36,38 +38,48 @@ async def srchDl(e):
         opts = {
             "format": "bestaudio/best",
             "cookiefile": get_cookies_file(),
-            "noplaylist": True
+            "noplaylist": True,
+            "quiet": True  # تقليل التفاعلات من yt-dlp
         }
         
         with yt_dlp.YoutubeDL(opts) as ydl:
             info = ydl.extract_info(lnk, download=False)
-        
-        if int(info["duration"]) > 3605:
+
+        # تحقق من وجود خاصية 'duration'
+        duration = info.get("duration", 0)
+        if duration > 3605:
             await e.reply("طول الفيديو كبير اوي، مش هنقدر نحمله 🙄")
             return
 
-        # تحديث التنسيق المستخدم لتفادي الأخطاء
-        opts['format'] = 'bestaudio[ext=m4a]/bestaudio'
-        
+        # تحميل الصوت
         audio_file = ydl.prepare_filename(info)
         ydl.download([lnk])
         
-        thb = info["thumbnail"]
-        thbFile = f"{id}.png"
-        r = requests.get(thb)
-        with open(thbFile, "wb") as f:
-            f.write(r.content)
+        thb = info.get("thumbnail", None)
+        if thb:
+            thbFile = f"{id}.png"
+            r = requests.get(thb)
+            with open(thbFile, "wb") as f:
+                f.write(r.content)
         
-        await zedub.send_file(
-            e.chat_id,
-            audio_file,
-            title=info["title"],
-            performer=info["channel"],
-            duration=int(info["duration"]),
-            thumb=thbFile,
-        )
+            await zedub.send_file(
+                e.chat_id,
+                audio_file,
+                title=info["title"],
+                performer=info.get("channel", "Unknown Artist"),
+                duration=duration,
+                thumb=thbFile,
+            )
+            os.remove(thbFile)
+        else:
+            await zedub.send_file(
+                e.chat_id,
+                audio_file,
+                title=info["title"],
+                performer=info.get("channel", "Unknown Artist"),
+                duration=duration,
+            )
 
-        os.remove(thbFile)
-        os.remove(audio_file)
+        os.remove(audio_file)  # إزالة ملف الصوت بعد الإرسال
     except Exception as ex:
         await e.reply(f"حصل خطأ: {str(ex)}")
