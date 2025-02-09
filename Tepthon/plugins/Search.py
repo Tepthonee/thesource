@@ -1,60 +1,62 @@
-import os
-import glob
 import random
+import glob
 import asyncio
-from telethon import events
-from telethon.sync import TelegramClient
+import yt_dlp
+import os
+from telethon import TelegramClient, events
+from yt_dlp import YoutubeDL
 from Tepthon import zedub
-from pytube import YouTube
+from ..Config import Config
 
-# دالة لجلب ملف الكوكيز عشوائيًا
+plugin_category = "البوت"
+
 def get_cookies_file():
-    folder_path = os.path.join(os.getcwd(), "rcookies")
+    folder_path = f"{os.getcwd()}/rcookies"
     txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
-    return random.choice(txt_files) if txt_files else None
+    if not txt_files:
+        raise FileNotFoundError("No .txt files found in the specified folder.")
+    cookie_txt_file = random.choice(txt_files)
+    return cookie_txt_file
 
-# دالة لتحميل الصوت من يوتيوب
-async def download_youtube_audio(url, cookies_file):
-    # قراءة الكوكيز من الملف
-    with open(cookies_file, 'r') as file:
-        cookies = file.read()
 
-    try:
-        yt = YouTube(url, use_oauth=False, allow_oauth_cache=True)
-        stream = yt.streams.filter(only_audio=True).first()
-        if not stream:
-            raise ValueError("لا يوجد مصدر صوت متاح لهذا الفيديو.")
+@zedub.on(events.NewMessage(pattern='.بحث3 (.*)'))
+async def get_song(event):
+    song_name = event.pattern_match.group(1)
+    await event.reply(f"جاري البحث عن الأغنية: {song_name}...")
 
-        # تحديد اسم الملف
-        output_path = "downloads"
-        os.makedirs(output_path, exist_ok=True)
-        file_name = f"{yt.title}.mp3"
-        file_path = stream.download(output_path=output_path, filename=file_name)
-        
-        return file_path
+    # إعداد خيارات yt-dlp
+    ydl_opts = {
+        "format": "bestaudio/best",
+        "addmetadata": True,
+        "key": "FFmpegMetadata",
+        "writethumbnail": False,
+        "prefer_ffmpeg": True,
+        "geo_bypass": True,
+        "nocheckcertificate": True,
+        "postprocessors": [
+            {"key": "FFmpegVideoConvertor", "preferedformat": "mp3"},
+            {"key": "FFmpegMetadata"},
+            {"key": "FFmpegExtractAudio"},
+        ],
+        "outtmpl": "%(title)s.%(ext)s",
+        "logtostderr": False,
+        "quiet": True,
+        "no_warnings": True,
+        "cookiefile": get_cookies_file(),
+    }
 
-    except Exception as e:
-        raise ValueError("رابط الفيديو غير صحيح أو غير متوفر.") from e
+    with YoutubeDL(ydl_opts) as ydl:
+        try:
+            info = ydl.extract_info(f"ytsearch:{song_name}", download=True)
+            title = info['entries'][0]['title']
+            filename = f"{title}.mp3"
 
-# حدث للاستجابة لأمر البحث
-@zedub.on(events.NewMessage(pattern=r'\.بحث (.+)'))  # استبدال client بـ zedub
-async def search_youtube(event):
-    url = event.pattern_match.group(1).strip()  # إزالة المسافات الزائدة
-    
-    await event.respond("جاري تحميل الصوت...")
-    
-    try:
-        # جلب ملف الكوكيز
-        cookies_file = get_cookies_file()
-        if not cookies_file:
-            await event.respond("لم يتم العثور على ملفات الكوكيز.")
-            return
-        
-        audio_file = await download_youtube_audio(url, cookies_file)
-        
-        await event.respond("تم تنزيل الصوت بنجاح!", file=audio_file)
-        
-    except ValueError as ve:
-        await event.respond(f"خطأ: {str(ve)}")
-    except Exception as e:
-        await event.respond(f"حدثت مشكلة أثناء التنزيل: {str(e)}")
+            await event.reply(f"تم العثور على الأغنية: {title}\nجاري إرسال الملف...")
+
+            # إرسال الملف إلى تيليجرام
+            await zedub.send_file(event.chat_id, filename)
+
+            # حذف الملف بعد الإرسال
+            os.remove(filename)
+        except Exception as e:
+            await event.reply(f"حدث خطأ أثناء البحث عن الأغنية: {e}")
