@@ -4,7 +4,7 @@ import random
 import asyncio
 from telethon import events, TelegramClient
 from pytube import YouTube
-from Tepthon import zedub
+from Tepthon import zedub  # تأكد من أن مكتبة zedub متوفرة لديك
 from pytube.helpers import safe_filename
 from config import APP_ID, API_HASH  # استيراد APP_ID و API_HASH من ملف الإعدادات
 
@@ -37,7 +37,7 @@ async def download_youtube_audio(url, cookies_file):
     return file_path
 
 # حدث للاستجابة لأمر البحث
-@client.on(events.NewMessage(pattern=r'\.بحث (.+)'))
+@zedub.on(events.NewMessage(pattern=r'\.بحث (.+)'))
 async def search_youtube(event):
     url = event.pattern_match.group(1).strip()
     
@@ -58,6 +58,6 @@ async def search_youtube(event):
     except Exception as e:
         await event.respond(f"حدثت مشكلة أثناء التنزيل: {str(e)}")
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # يمكنك تصحيح هذا السطر بكتابة __name__ بشكل صحيح
     client.start()
     client.run_until_disconnected()
