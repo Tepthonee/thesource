@@ -1,11 +1,10 @@
 import os
 import requests
 import yt_dlp
-from Tepthon import zedub
 from telethon import TelegramClient, events
-
-# استبدال B3KKK بتعريف الدالة أو الكائن الصحيح للبحث
-# على سبيل المثال قد تستخدم مكتبة من Google API للبحث عن الفيديوهات في يوتيوب
+from Tepthon import zedub
+import glob
+import random
 
 def get_cookies_file():
     # تأكد من تعديل مسار المجلد حسب احتياجك
@@ -16,7 +15,7 @@ def get_cookies_file():
     cookie_txt_file = random.choice(txt_files)
     return cookie_txt_file
 
-@zedub.on(events.NewMessage(pattern=r'\.يوتيوب (.+)'))
+@zedub.on(events.NewMessage(pattern=".يوت"))
 async def srchDl(e):
     try:
         txt = e.raw_text.split()
@@ -24,7 +23,7 @@ async def srchDl(e):
             await e.reply("اكتب اسم الفيديو بعد الامر.")
             return
         q = txt[1]
-        res = B3KKK(q, max_results=1).to_dict()  # تأكد من أن B3KKK معرف بشكل صحيح
+        res = zedub(q, max_results=1).to_dict()  # تأكد من أن zedub معرف بشكل صحيح
         if not res:
             await e.reply("ما لقيتش حاجة 😢")
             return
