@@ -9,14 +9,14 @@ import random
 
 def get_cookies_file():
     # تأكد من تعديل مسار المجلد حسب احتياجك
-    folder_path = f"{os.getcwd()}/cookies"
+    folder_path = f"{os.getcwd()}/rcookies"
     txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
     if not txt_files:
         raise FileNotFoundError("No .txt files found in the specified folder.")
     cookie_txt_file = random.choice(txt_files)
     return cookie_txt_file
 
-@zedub.on(events.NewMessage(pattern=".يوت"))
+@zedub.on(events.NewMessage(pattern=".يوتيوب"))
 async def srchDl(e):
     try:
         txt = e.raw_text.split()
