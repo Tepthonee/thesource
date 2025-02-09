@@ -1,6 +1,7 @@
 import os
 import requests
 import yt_dlp
+from youtube_search import YoutubeSearch as B3KKK
 from telethon import TelegramClient, events
 from Tepthon import zedub
 import glob
@@ -23,7 +24,7 @@ async def srchDl(e):
             await e.reply("اكتب اسم الفيديو بعد الامر.")
             return
         q = txt[1]
-        res = zedub(q, max_results=1).to_dict()  # تأكد من أن zedub معرف بشكل صحيح
+        res = B3KKK(q, max_results=1).to_dict()  # تأكد من أن zedub معرف بشكل صحيح
         if not res:
             await e.reply("ما لقيتش حاجة 😢")
             return
