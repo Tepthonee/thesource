@@ -1,87 +1,57 @@
 import os
 import glob
 import random
-import re
+import asyncio
+from telethon import events
 from Tepthon import zedub
-from yt_dlp import YoutubeDL
+from pytube import YouTube
+from pytube.helpers import safe_filename
 
-# دالة للحصول على ملف الكوكيز
+# دالة لجلب ملف الكوكيز عشوائيًا
 def get_cookies_file():
     folder_path = f"{os.getcwd()}/rcookies"
     txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
     return random.choice(txt_files) if txt_files else None
 
-# إعدادات yt-dlp
-ytd = {
-    "prefer_ffmpeg": True,
-    "addmetadata": True,
-    "geo-bypass": True,
-    "nocheckcertificate": True,
-    "cookiefile": get_cookies_file(),
-    "postprocessors": [{"key": "FFmpegMetadata"}],
-}
-
-# دالة لتنظيف اسم الملف
-def clean_filename(title):
-    title = re.sub(r'[<>:"/\\|?*]', '', title)  # إزالة الرموز غير المسموحة
-    return title[:50]  # تقليم العنوان ليكون مختصراً
-
-# دالة للحصول على رابط الفيديو
-def get_yt_link(query):
-    with YoutubeDL(ytd) as ydl:
-        info = ydl.extract_info(f"ytsearch:{query}", download=False)
-        if info and 'entries' in info and len(info['entries']) > 0:
-            url = info['entries'][0]['url']
-            title = info['entries'][0]['title']
-            return url, title
-    return None, None
-
-# دالة لتحميل المحتوى الصوتي
-def download_yt(url, options, title):
-    filename = f"{clean_filename(title)}.m4a"  # اسم الملف مع صيغة m4a
-    options['outtmpl'] = os.path.join(os.getcwd(), filename)
-    with YoutubeDL(options) as ydl:
-        ydl.download([url])
-
-# دالة لتحميل الفيديو الصوتي
-def download_audio(query):
-    ytd["format"] = "bestaudio"
-    url, title = get_yt_link(query)
+# دالة لتحميل الصوت من يوتيوب
+async def download_youtube_audio(url, cookies_file):
+    # قراءة الكوكيز من الملف
+    with open(cookies_file, 'r') as file:
+        cookies = file.read()
     
-    if not url:
-        return "⌔∮ لم يتم العثور على الفيديو، اكتب عنوانًا مفصلًا بشكل صحيح"
-    
-    download_yt(url, ytd, title)
-    return "⌔∮ تم تحميل الملف الصوتي بنجاح!"
+    # تعيين الكوكيز
+    YouTube.cipher = lambda: cookies
+    yt = YouTube(url)
 
-# دالة لتحميل الفيديو
-def download_video(query):
-    ytd["format"] = "best"
-    url, title = get_yt_link(query)
+    # استخراج الصوت فقط
+    stream = yt.streams.filter(only_audio=True).first()
     
-    if not url:
-        return "⌔∮ لم يتم العثور على الفيديو، اكتب عنوانًا مفصلًا بشكل صحيح"
-    
-    download_yt(url, ytd, title)
-    return "⌔∮ تم تحميل الفيديو بنجاح!"
+    # تحميل الصوت
+    file_path = stream.download(filename=safe_filename(yt.title) + '.mp4')
+    return file_path
 
-# دالة للبحث
-def search_video(query):
-    url, title = get_yt_link(query)
+# حدث للاستجابة لأمر البحث
+@zedub.on(events.NewMessage(pattern=r'\.بحث (.+)'))
+async def search_youtube(event):
+    url = event.pattern_match.group(1)
     
-    if not url:
-        return "⌔∮ لم يتم العثور على الفيديو، اكتب عنوانًا مفصلًا بشكل صحيح"
+    await event.respond("جاري تحميل الصوت...")
     
-    return f"⌔∮ تم العثور على الفيديو: {title}\n⌔∮ الرابط: {url}"
+    try:
+        # جلب ملف الكوكيز
+        cookies_file = get_cookies_file()
+        if not cookies_file:
+            await event.respond("لم يتم العثور على ملفات الكوكيز.")
+            return
+        
+        audio_file = await download_youtube_audio(url, cookies_file)
+        
+        await event.respond("تم تنزيل الصوت بنجاح!", file=audio_file)
+        
+    except Exception as e:
+        await event.respond(f"حدثت مشكلة أثناء التنزيل: {str(e)}")
 
-# مثال على الاستخدام
+# ابدأ هنا البوت أو أي إعدادات أخرى
 if __name__ == "__main__":
-    query = input("أدخل عنوان البحث: ")
-    choice = input("هل تريد تحميل صوتي أو فيديو؟ (صوتي/فيديو): ")
-    
-    if choice == "صوتي":
-        print(download_audio(query))
-    elif choice == "فيديو":
-        print(download_video(query))
-    else:
-        print("اختيار غير صحيح. يرجى الاختيار بين صوتي وفيديو.")
+    # تأكد من إضافة كود بدء البوت هنا
+    pass
