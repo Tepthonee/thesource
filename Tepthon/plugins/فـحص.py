@@ -1,11 +1,11 @@
 import asyncio
 from telethon import events
-from Tepthon import zedub
 from telethon.errors.rpcerrorlist import MediaEmptyError
+from Tepthon import zedub
 from ..core.managers import edit_or_reply
 from ..helpers.utils import _format
 
-# متغير للتحكم في حالة حفظ البصمة الذاتية
+# متغير للتحكم في حالة حفظ الصوتيات الذاتية
 vocself = True
 
 # دالة لتفعيل حفظ الصوتيات الذاتية
@@ -29,7 +29,7 @@ async def stop_datea(event):
     await edit_or_reply(event, "⎉╎حفظ البصمة الذاتية التلقائي 🎙\n⎉╎معطلـه .. مسبقـاً ✅")
 
 # دالة للاستماع للرسائل الصوتية الذاتية الجديدة وحفظها
-@zedub.on(events.NewMessage(func=lambda e: e.is_private and (e.audio or e.voice) and e.media_unread))
+@zedub.on(events.NewMessage(func=lambda e: e.is_private and (e.voice) and e.media_unread))
 async def sddm(event):
     global vocself
 
@@ -37,7 +37,7 @@ async def sddm(event):
         sender = await event.get_sender()
         username = f"@{sender.username}" if sender.username else "لا يوجد"
         try:
-            voc = await event.download_media()  # تحميل الوسائط (الصوتيات)
+            voc = await event.download_media()  # تحميل الوسائط (الصوتيات الذاتية)
             await zedub.send_file("me", voc, caption=f"[ᯓ 𝙏𝙀𝙋𝙏𝙃𝙊𝙉 ⌁ - حفـظ البصمـة الذاتية 🎙\n⋆─┄─┄─┄─┄─┄─┄─⋆\n⌔ مࢪحبـًا .. عـزيـزي 🫂\n⌔ تـم حفظ البصمة الذاتية .. تلقائيًّـا ☑️ ❝\n⌔ معلومـات المـرسـل :-\n• الاسم : {_format.mentionuser(sender.first_name , sender.id)}\n• اليوزر : {username}\n• الايدي : {sender.id}")
         except MediaEmptyError:
             await edit_or_reply(event, "⎉╎حدث خطأ أثناء حفظ الصوتية. يرجى المحاولة مجددًا.")
