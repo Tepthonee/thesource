@@ -1,52 +1,46 @@
-import asyncio
-from telethon import events
 from telethon.errors.rpcerrorlist import MediaEmptyError
 from Tepthon import zedub
-from ..core.managers import edit_or_reply
-from ..helpers.utils import _format
 
-# متغير للتحكم في حالة حفظ الصوتيات الذاتية
-vocself = True
+vocSelf = True
 
-# دالة لتفعيل حفظ الصوتيات الذاتية
-@zedub.zed_cmd(pattern="(تفعيل البصمه الذاتيه|تفعيل البصمه الذاتية|تفعيل البصمة الذاتيه|تفعيل البصمة الذاتية)")
-async def start_datea(event):
-    global vocself
+def isSong(v):
+    return False 
 
-    if vocself:
-        return await edit_or_reply(event, "⎉╎حفظ البصمة الذاتية التلقائي 🎙\n⎉╎مفعلـه .. مسبقًـا ✅")
-    vocself = True
-    await edit_or_reply(event, "⎉╎تم تفعيل حفظ البصمة الذاتية 🎙\n⎉╎تلقائيًّـا .. بنجاح ✅")
+@zedub.on(events.NewMessage(pattern="(تفعيل البصمه|فع البصمه)"))
+async def strtVocSav(evn):
+    global vocSelf
+    if vocSelf:
+        return await evn.reply("حفظ البصمه شغال من قبل 🎙✅")
+    vocSelf = True
+    await evn.reply("تم تشغيل حفظ البصمه تلقائي 🎙✅")
 
-# دالة لإيقاف حفظ الصوتيات الذاتية
-@zedub.zed_cmd(pattern="(ايقاف البصمه الذاتيه|ايقاف البصمه الذاتية|ايقاف البصمة الذاتيه|ايقاف البصمة الذاتية)")
-async def stop_datea(event):
-    global vocself
-    
-    if vocself:
-        vocself = False
-        return await edit_or_reply(event, "⎉╎تم تعطيل حفظ البصمة الذاتية 🎙\n⎉╎الان صارت مو شغالة .. ✅")
-    await edit_or_reply(event, "⎉╎حفظ البصمة الذاتية التلقائي 🎙\n⎉╎معطلـه .. مسبقـاً ✅")
+@zedub.on(events.NewMessage(pattern="(ايقاف البصمه|اقف البصمه)"))
+async def stpVocSav(evn):
+    global vocSelf
+    if not vocSelf:
+        return await evn.reply("حفظ البصمه معطل من قبل 🎙❌")
+    vocSelf = False
+    await evn.reply("تم تعطيل حفظ البصمه 🎙❌")
 
-# دالة للاستماع للرسائل الصوتية الذاتية الجديدة وحفظها
-@zedub.on(events.NewMessage(func=lambda e: e.is_private and (e.voice) and e.media_unread))
-async def sddm(event):
-    global vocself
-
-    if vocself:
-        sender = await event.get_sender()
-        username = f"@{sender.username}" if sender.username else "لا يوجد"
-        try:
-            voc = await event.download_media()  # تحميل الوسائط (الصوتيات الذاتية)
-            await zedub.send_file("me", voc, caption=f"[ᯓ 𝙏𝙀𝙋𝙏𝙃𝙊𝙉 ⌁ - حفـظ البصمـة الذاتية 🎙\n⋆─┄─┄─┄─┄─┄─┄─⋆\n⌔ مࢪحبـًا .. عـزيـزي 🫂\n⌔ تـم حفظ البصمة الذاتية .. تلقائيًّـا ☑️ ❝\n⌔ معلومـات المـرسـل :-\n• الاسم : {_format.mentionuser(sender.first_name , sender.id)}\n• اليوزر : {username}\n• الايدي : {sender.id}")
-        except MediaEmptyError:
-            await edit_or_reply(event, "⎉╎حدث خطأ أثناء حفظ الصوتية. يرجى المحاولة مجددًا.")
-
-# ---------- تنبيه -----------
-# تأكد من وجود متطلبات تشغيل البرنامج والإعدادات الصحيحة لـ Telethon
-# يمكنك إضافة المزيد من الخصائص حسب الحاجة، مثل تعيين مسار التخزين أو معالجة الأخطاء
-
-# مثال على استخدام الدوال
-if __name__ == "__main__":
-    # هنا يمكن إضافة كود لبدء البوت أو تشغيل الدوال
-    pass
+@zedub.on(events.NewMessage(func=lambda e: e.is_private and e.voice and e.media_unread))
+async def savVoc(evn):
+    global vocSelf
+    if not vocSelf:
+        return
+    snd = await evn.get_sender()
+    us = f"@{snd.username}" if snd.username else "لا يـوجـد"
+    try:
+        if not isSong(evn.voice):
+            pth = await evn.download_media(file="voicemsgs/")
+            await zedub.send_file(
+                "me",
+                pth,
+                caption=f"تم حفظ البصمه تلقائي 🎙✅\n\n"
+                f"المرسل: {snd.first_name} ({snd.id})\n"
+                f"اليوزر: {us}\n"
+                f"الايدي: {snd.id}",
+            )
+    except MediaEmptyError:
+        await evn.reply("حصل مشكله وقت الحفظ، جرب تاني.")
+    except Exception as ex:
+        await evn.reply(f"حصل خطأ: {str(ex)}")
