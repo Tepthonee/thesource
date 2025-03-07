@@ -78,6 +78,7 @@ wget==3.2
 youtube-search-python==1.4.9
 youtube-search
 youtube_dl
+gtts
 yt-dlp
 img2html
 googletrans-py
