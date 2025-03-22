@@ -44,8 +44,8 @@ async def amireallyalive(event):
         zedda = f"{zzd}┊{zzt}"
     else:
         zedda = f"{bt.year}/{bt.month}/{bt.day}"
-    Z_EMOJI = gvarstatus("ALIVE_EMOJI") or "⎆╿"
-    ALIVE_TEXT = gvarstatus("ALIVE_TEXT") or "** بـوت تيبثـون 𝗧𝗘𝗣𝗧𝗛𝗢𝗡 يعمـل بنجـاح ☑️ .. **"
+    Z_EMOJI = gvarstatus("ALIVE_EMOJI") or "✾╿"
+    ALIVE_TEXT = gvarstatus("ALIVE_TEXT") or "**- بوت تيبثـون 𝖳𝖤𝖯𝖳𝖧𝖮𝖭 يعمـل بنجـاح 🌿 ..**"
     ZED_IMG = gvarstatus("ALIVE_PIC")
     zed_caption = gvarstatus("ALIVE_TEMPLATE") or zed_temp
     caption = zed_caption.format(
@@ -82,15 +82,15 @@ async def amireallyalive(event):
 
 zed_temp = """{ALIVE_TEXT}
 
-**{Z_EMOJI} قاعـدة البيانـات : ** تعمـلُ بنجـاح ♾
+**{Z_EMOJI} قاعـدة البيانـات : ** سريعـة للغايـة 🚀 
 **{Z_EMOJI} إصــدار المكتبــة :** `{telever}`
 **{Z_EMOJI} إصــدار الـسـورس : ** `{zdver}`
-**{Z_EMOJI} إصــدار بايـثـون : ** `{pyver}`
-**{Z_EMOJI} وقـت التشغيـل : ** `{uptime}`
-**{Z_EMOJI} منصـة التنصيب :** `ᕼᗴᖇOKᑌ`
+**{Z_EMOJI} إصــدار بايـثون : ** `{pyver}`
+**{Z_EMOJI} وَقـت التشغِيـل : ** `{uptime}`
+**{Z_EMOJI} منــصـة التنصِيب :** `𝐡𝐞𝐫𝐨𝐤𝐮`
 **{Z_EMOJI} تاريــخ التنصيـب : ** `{zedda}`
 **{Z_EMOJI} المالـك : ** {mention}
-**{Z_EMOJI} قنـاة الـسـورس :** [اضغـط هنـا](https://t.me/Tepthon)"""
+**{Z_EMOJI} قنـاتنا :** [اضغـط هنـا](https://t.me/Tepthon)"""
 
 
 @zedub.zed_cmd(
@@ -106,9 +106,9 @@ zed_temp = """{ALIVE_TEXT}
 async def amireallyialive(event):
     "A kind of showing bot details by your inline bot"
     reply_to_id = await reply_id(event)
-    Z_EMOJI = gvarstatus("ALIVE_EMOJI") or "⎆╿"
-    zed_caption = "** بـوت تيبثـون 𝗧𝗘𝗣𝗧𝗛𝗢𝗡 يعمـل بنجـاح ☑️ .. **\n"
-    zed_caption += f"**{Z_EMOJI} إصــدار تليثـون : ** `{version.__version__}\n`"
+    Z_EMOJI = gvarstatus("ALIVE_EMOJI") or "✾╿"
+    zed_caption = "**- بوت تيبثـون 𝖳𝖤𝖯𝖳𝖧𝖮𝖭 يعمـل بنجـاح 🌿 .. **\n"
+    zed_caption += f"**{Z_EMOJI} إصـــدار تليثـون : ** `{version.__version__}\n`"
     zed_caption += f"**{Z_EMOJI} إصــدار تيبثــون : ** `{tepversion}`\n"
     zed_caption += f"**{Z_EMOJI} إصــدار بايـثـون : ** `{python_version()}\n`"
     zed_caption += f"**{Z_EMOJI} المالـك : ** {mention}\n"
